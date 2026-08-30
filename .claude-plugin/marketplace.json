@@ -1,0 +1,15 @@
+{
+  "name": "afterlaunch-skills",
+  "description": "Free, standalone growth skills for a founder's agent, from the AfterLaunch team. Each one is the desk we run ourselves, published whole; connecting AfterLaunch adds a shared board, never a paywall on the method.",
+  "owner": {
+    "name": "AfterLaunch",
+    "url": "https://afterlaunch.io"
+  },
+  "plugins": [
+    {
+      "name": "reddit-desk",
+      "source": "./",
+      "description": "Find, judge and draft Reddit replies inside each subreddit's own rules and budgets. Never posts: you post, in your own words."
+    }
+  ]
+}

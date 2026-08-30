@@ -1,0 +1,11 @@
+{
+  "name": "reddit-desk",
+  "description": "A Reddit desk for a founder's agent: find the threads worth answering in the subreddits you work, read each sub's rules before anything else, draft replies inside the venue's own budget, catch near-duplicate comments before they earn a ban, and keep a ledger reconciled against what was actually posted. It never posts, votes or DMs. Works standalone; connecting AfterLaunch adds one shared board.",
+  "version": "0.1.0",
+  "author": {
+    "name": "AfterLaunch",
+    "url": "https://afterlaunch.io"
+  },
+  "homepage": "https://github.com/afterlaunch/skills",
+  "license": "MIT"
+}
