@@ -1,7 +1,7 @@
 {
   "name": "afterlaunch-skills",
-  "description": "Growth skills for a founder's agent, from the AfterLaunch team. reddit-desk: find, judge and draft Reddit replies inside each subreddit's own rules and budgets, never posting. session-recap: rebuild your memory of a work session in three answers and, with AfterLaunch connected, reconcile the session against your growth record so the effort stops evaporating. Each works without an account; connecting AfterLaunch adds one shared board and a persistent record, never a paywall on the method.",
-  "version": "0.1.0",
+  "description": "A founder's content loop as agent skills, from the AfterLaunch team. Seven skills that take you from nothing to something posted: write the context file every skill reads, farm ideas from anything you read, calibrate your voice by forced choice, draft three hooks and a post per platform, strip the machine tells, work Reddit inside each subreddit's own rules without ever posting, and keep the session's effort when the terminal closes. Free and standalone; connecting AfterLaunch adds one shared board and a record that outlives the session.",
+  "version": "0.2.0",
   "author": {
     "name": "AfterLaunch",
     "url": "https://afterlaunch.io"

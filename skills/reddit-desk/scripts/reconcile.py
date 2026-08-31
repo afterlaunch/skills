@@ -38,14 +38,32 @@ from pathlib import Path
 # (~/.claude/content/reddit, see .claude/skills/MOVED.md); this script is the
 # code and lives in the repo. REDDIT_DESK overrides the estate path.
 import os
-HERE = Path(os.environ.get('REDDIT_DESK') or Path.home() / '.claude' / 'content' / 'reddit').resolve()
+# The estate. REDDIT_DESK still wins for anyone already using it; otherwise
+# this skill lives under the suite's shared SKILLS_ESTATE, so one variable
+# configures the whole pack.
+def _estate():
+    import os
+    from pathlib import Path
+    explicit = os.environ.get('REDDIT_DESK')
+    if explicit:
+        return Path(explicit).resolve()
+    shared = os.environ.get('SKILLS_ESTATE')
+    root = Path(shared) if shared else Path.home() / '.claude' / 'content'
+    return (root / 'reddit').resolve()
+
+MAX_INPUT_BYTES = 4 * 1024 * 1024  # a permalink list is kilobytes
+HERE = _estate()
 THREADS = HERE / 'threads'
 
 # A permalink from a profile page carries everything we need: the sub, the
 # thread, and the comment itself. Accepts old./new./np. and any title slug.
+# Bounded to what Reddit itself allows (a subreddit name is 3 to 21
+# characters, ids are short base36). Unbounded groups let a malformed paste
+# build a filename past the filesystem limit, which crashed the run with a
+# traceback instead of skipping the line (security review, 2026-08-31).
 LINK = re.compile(
-    r'reddit\.com/r/(?P<sub>[A-Za-z0-9_]+)/comments/(?P<thread>[a-z0-9]+)'
-    r'(?:/[^/]*)?(?:/comment/(?P<comment>[a-z0-9]+))?',
+    r'reddit\.com/r/(?P<sub>[A-Za-z0-9_]{2,24})/comments/(?P<thread>[a-z0-9]{1,16})'
+    r'(?:/[^/]*)?(?:/comment/(?P<comment>[a-z0-9]{1,16}))?',
     re.I,
 )
 
@@ -96,7 +114,7 @@ def stub(sub: str, thread: str, comment: str | None) -> str:
 
 
 def main() -> int:
-    raw = sys.argv[1:] or sys.stdin.read().split()
+    raw = sys.argv[1:] or sys.stdin.read(MAX_INPUT_BYTES).split()
     if not raw:
         print('Nothing to reconcile. Paste comment permalinks, one per line.')
         return 1

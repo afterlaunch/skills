@@ -12,7 +12,50 @@ what [AfterLaunch](https://afterlaunch.io) is for, and each skill names the
 exact point where it hands over. With a key, the skills work the same board
 the product ranks; without one, they work alone, completely.
 
-## The skills
+## The loop
+
+The seven skills are one loop, not a menu. In order they take you from
+nothing to something posted, in your own voice, without the machine tells,
+with the session's effort kept:
+
+**`product-context`** writes the one file every other skill reads. Who you
+are, who it is for, what you can prove, the words you keep and the words you
+refuse. It interviews rather than guesses, and anything it cannot verify
+stays marked UNKNOWN rather than filled with something plausible, because an
+invention downstream skills cannot see is what quietly ruins every draft
+after it.
+
+**`farm`** is the front door for everything from outside. A link, a
+screenshot, a video, pasted text: it pulls the ideas out and sorts each into
+the lane it belongs in, something to say, something to build, something to
+remember. Intake is not a content activity, it is where the whole thing
+starts.
+
+**`voice`** turns your taste into a file, by forced choice rather than by
+asking you to describe your own writing. Picking between two sentences takes
+two seconds and needs no ideas. Do enough of them and a position emerges that
+no single sample could give.
+
+**`draft`** produces three hook options with reasoning, then a draft per
+platform. Never one finished post, because choosing beats editing.
+
+**`tells`** is the de-slop pass, over prose and over built interfaces. One
+register of the patterns that give machine-made work away, each check
+quoting the line that failed. It runs over everything else.
+
+**`reddit-desk`** and **`session-recap`** are the channel and the loop that
+closes it, both described below.
+
+All seven share one estate. Set `SKILLS_ESTATE` once (it defaults to
+`~/.claude/content`) and each skill reads and writes its own subdirectory of
+it. That is the whole configuration.
+
+## Two of them at more length
+
+The other five are described above and their own SKILL.md files carry the
+detail. These two get more room here because one is about not getting banned
+and the other is about what a skill may do with a whole session's contents.
+
 
 ### reddit-desk
 
@@ -36,6 +79,8 @@ tension. It:
   their caveats, not opinions.
 
 Every safety mechanic has a runnable eval: `python3 skills/reddit-desk/evals/run.py`.
+Every skill in the pack ships one, all offline and dependency-free:
+`for s in skills/*/; do python3 "$s/evals/run.py"; done`.
 
 ### session-recap
 
@@ -64,7 +109,7 @@ As a Claude Code plugin:
 
 ```
 /plugin marketplace add afterlaunch/skills
-/plugin install reddit-desk@afterlaunch-skills
+/plugin install afterlaunch-skills@afterlaunch-skills
 ```
 
 In Codex CLI, Cursor, Copilot, Gemini CLI, Windsurf, Aider or any client
@@ -73,6 +118,10 @@ points the agent at each skill, and every skill is plain markdown with
 dependency-free Python, so nothing here needs Claude Code. There is no
 invented manifest format for those clients, because none exists to target;
 the markdown is the interface.
+
+Run `product-context` first, whichever client you use. Every other skill
+reads what it writes, and a pack pointed at nothing writes marketing for a
+company it has invented.
 
 ## What lights up with AfterLaunch (optional)
 

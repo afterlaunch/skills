@@ -29,7 +29,21 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-HERE = Path(os.environ.get('REDDIT_DESK') or Path.home() / '.claude' / 'content' / 'reddit').resolve()
+# The estate. REDDIT_DESK still wins for anyone already using it; otherwise
+# this skill lives under the suite's shared SKILLS_ESTATE, so one variable
+# configures the whole pack.
+def _estate():
+    import os
+    from pathlib import Path
+    explicit = os.environ.get('REDDIT_DESK')
+    if explicit:
+        return Path(explicit).resolve()
+    shared = os.environ.get('SKILLS_ESTATE')
+    root = Path(shared) if shared else Path.home() / '.claude' / 'content'
+    return (root / 'reddit').resolve()
+
+MAX_INPUT_BYTES = 4 * 1024 * 1024  # a draft is kilobytes
+HERE = _estate()
 THRESHOLD = 0.6  # conservative: only substantially-the-same text collapses
 
 STOP = set('the a an and or of to in on for with is are was were be been it this that as at by from you your we our they their if not but so than then there here what which who how'.split())
@@ -127,7 +141,7 @@ def main() -> int:
         print(f'{len(drafts)} drafts read; ' + ('clear' if flagged == 0 else f'{flagged} flagged: read both before either is posted'))
         return 1 if flagged else 0
 
-    candidate = sys.stdin.read()
+    candidate = sys.stdin.read(MAX_INPUT_BYTES)
     if not candidate.strip():
         print('usage: neardup.py < draft.txt', file=sys.stderr)
         return 2

@@ -32,7 +32,8 @@ the ban, and hand them the draft to paste. Do not build the path.
 
 The skill is code. The desk's DATA lives in a workspace directory OUTSIDE any
 repo, one per account, `~/.claude/content/reddit` by default;
-`REDDIT_DESK=/path` points the scripts anywhere else (tests, a second
+`SKILLS_ESTATE=/path` moves the whole suite, this desk included, and
+`REDDIT_DESK=/path` points just this desk anywhere else (tests, a second
 account). Nothing in the skill writes outside that workspace. First run: the
 scripts create nothing on their own; copy `seed/VENUES.md` in as your
 `RULES.md` starting point and `seed/CLAIMS_TEMPLATE.md` as your claim
@@ -109,7 +110,7 @@ sight. INTEL goes to your notes, not to a draft.
   in `REPLY_LEDGER.md` is unspent. On r/SaaS the product budget is zero,
   always. Site-wide: one product name or link per day, at most.
 - Voice from the founder's own voice profile where one exists (this suite's
-  `post-voice` skill builds one); otherwise plain sentences, no aphorisms,
+  `voice` skill builds one); otherwise plain sentences, no aphorisms,
   never a confession about your own work. r/SaaS rule 4 bans AI-generated
   text outright and moderation bots are installed, so the draft is raw
   material for the founder's rewrite, not a finished comment.

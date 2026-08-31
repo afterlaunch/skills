@@ -11,7 +11,11 @@ only needs to look at ids above the watermark to know what is new.
 """
 import os, re
 # Data lives in the content estate, code lives here (see reconcile.py).
-HERE=os.path.abspath(os.environ.get('REDDIT_DESK') or os.path.expanduser('~/.claude/content/reddit'))
+# REDDIT_DESK still wins for anyone already using it; otherwise the suite's
+# shared SKILLS_ESTATE, so one variable configures the whole pack.
+HERE=os.path.abspath(os.environ.get('REDDIT_DESK')
+                     or os.path.join(os.environ.get('SKILLS_ESTATE')
+                                     or os.path.expanduser('~/.claude/content'), 'reddit'))
 TD=os.path.join(HERE,'threads')
 FIELDS=['Sub','Id','URL','Posted','First seen','Last checked','Status','Our reply','Product','Claims','Why']
 def parse(p):
