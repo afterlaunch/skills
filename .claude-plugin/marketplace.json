@@ -7,9 +7,9 @@
   },
   "plugins": [
     {
-      "name": "reddit-desk",
+      "name": "afterlaunch-skills",
       "source": "./",
-      "description": "Find, judge and draft Reddit replies inside each subreddit's own rules and budgets. Never posts: you post, in your own words."
+      "description": "The pack: reddit-desk (draft replies inside each sub's rules; never posts) and session-recap (a session's effort, reconciled into your growth record)."
     }
   ]
 }

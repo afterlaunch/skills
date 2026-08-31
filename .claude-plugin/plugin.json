@@ -1,6 +1,6 @@
 {
-  "name": "reddit-desk",
-  "description": "A Reddit desk for a founder's agent: find the threads worth answering in the subreddits you work, read each sub's rules before anything else, draft replies inside the venue's own budget, catch near-duplicate comments before they earn a ban, and keep a ledger reconciled against what was actually posted. It never posts, votes or DMs. Works standalone; connecting AfterLaunch adds one shared board.",
+  "name": "afterlaunch-skills",
+  "description": "Growth skills for a founder's agent, from the AfterLaunch team. reddit-desk: find, judge and draft Reddit replies inside each subreddit's own rules and budgets, never posting. session-recap: rebuild your memory of a work session in three answers and, with AfterLaunch connected, reconcile the session against your growth record so the effort stops evaporating. Each works without an account; connecting AfterLaunch adds one shared board and a persistent record, never a paywall on the method.",
   "version": "0.1.0",
   "author": {
     "name": "AfterLaunch",

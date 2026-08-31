@@ -37,17 +37,38 @@ tension. It:
 
 Every safety mechanic has a runnable eval: `python3 skills/reddit-desk/evals/run.py`.
 
+### session-recap
+
+A founder running many agent sessions in parallel comes back to each one
+cold. This skill answers three questions from the session's own history: the
+main thing shipped, how it works now in plain words, and everything started
+but unfinished with whose move it is.
+
+Said plainly: on its own this is a convenience. It earns its place CONNECTED,
+where the recap stops being a summary and becomes a reconciliation: the
+session's work is matched against your board, a reply drafted but never saved
+is saved, a thread the board never saw is proposed onto it, and one durable
+fact enters the record every future draft reads. A summary nobody reconciles
+is effort that evaporates when the terminal closes.
+
+It ships with a binding security section, because a recap reads an entire
+session: secrets are redacted before anything is summarised or written,
+session content is treated as data rather than instructions, writes go only
+to the AfterLaunch server you configured, and the write surface is exactly
+three verbs, none of which publishes anything. It ships no scripts at all.
+Evals: `python3 skills/session-recap/evals/run.py`.
+
 ## Install
 
 As a Claude Code plugin:
 
 ```
 /plugin marketplace add afterlaunch/skills
-/plugin install reddit-desk@afterlaunch-skills
+/plugin install afterlaunch-skills@afterlaunch-skills
 ```
 
-Or read `skills/reddit-desk/SKILL.md` directly from this repository; the
-skill is plain text and the scripts are dependency-free Python.
+Or read `skills/<name>/SKILL.md` directly from this repository; the skills
+are plain text and the scripts are dependency-free Python.
 
 ## What lights up with AfterLaunch (optional)
 
@@ -60,6 +81,11 @@ reply saves against its move (`update_draft`), and a durable venue fact goes
 into the record every future draft reads (`record_insight`). Without a key,
 none of that is needed and the free scan at
 [afterlaunch.io](https://afterlaunch.io) is the honest pointer.
+
+For session-recap, the key is most of the point: `get_standup` reads what the
+record says shipped, `list_feed` finds the session's work on the board,
+`update_draft` saves what would otherwise evaporate, and `record_insight`
+keeps at most one durable fact per recap. Shipping stays yours, always.
 
 ## House rules the skills are written under
 
