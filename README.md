@@ -16,8 +16,8 @@ the product ranks; without one, they work alone, completely.
 
 ### reddit-desk
 
-Reddit is the highest-leverage cited source in AI search answers, and the
-easiest place for an agent to get its owner banned. This desk exists for that
+Reddit is one of the sources AI search engines cite most, and the easiest
+place for an agent to get its owner banned. This desk exists for that
 tension. It:
 
 - reads each subreddit's OWN rules before anything else, and keeps them in a
@@ -64,11 +64,15 @@ As a Claude Code plugin:
 
 ```
 /plugin marketplace add afterlaunch/skills
-/plugin install afterlaunch-skills@afterlaunch-skills
+/plugin install reddit-desk@afterlaunch-skills
 ```
 
-Or read `skills/<name>/SKILL.md` directly from this repository; the skills
-are plain text and the scripts are dependency-free Python.
+In Codex CLI, Cursor, Copilot, Gemini CLI, Windsurf, Aider or any client
+that reads `AGENTS.md` natively: the `AGENTS.md` at this repository's root
+points the agent at each skill, and every skill is plain markdown with
+dependency-free Python, so nothing here needs Claude Code. There is no
+invented manifest format for those clients, because none exists to target;
+the markdown is the interface.
 
 ## What lights up with AfterLaunch (optional)
 

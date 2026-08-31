@@ -19,3 +19,11 @@ by default, `REDDIT_DESK=/path` to move it). Seed files to copy on first run:
 
 Verify the safety mechanics any time with
 `python3 skills/reddit-desk/evals/run.py`.
+
+## session-recap
+
+When the person returns to a session cold and asks what happened here, read
+`skills/session-recap/SKILL.md` and answer its three questions from THIS
+session's own context only, never inventing work from other sessions. Its
+security section is binding: before any write to a connected record, redact
+anything credential-shaped.
