@@ -1,12 +1,18 @@
-# Venues: the per-subreddit posture and budget matrix
+# Venues: a worked example, and one starting set
 
-**Read from each sub's rules page or sidebar, dated per row. Re-read before any
-post that names or links the product; mods change these.** This is the seed
-the skill ships with, a starting map, not your state. Copy it into your
-workspace as `RULES.md` on first run; THAT file carries your account's own
-status per sub (open, banned, karma-gated), your spent budgets and their
-reopen dates, and the verbatim rules you read yourself, and it wins on any
-disagreement with this seed.
+**This file is two things, and neither is the list of subs that matter.** It
+is a worked example of the row format, so you can see what a good row looks
+like before writing your own, and it is a ready-made starting set for anyone
+whose buyers really are in AI search, SEO or SaaS. If your buyers read
+somewhere else, and most products' do, take the shape and leave the rows:
+SKILL.md step 0 is how you find your own rooms and read their rules.
+
+Every row here was read from that sub's own rules page or sidebar on the
+date in the last column. Re-read before any post that names or links the
+product; mods change these. Your workspace `RULES.md` is the file this desk
+obeys: your account's status per sub (open, banned, karma-gated), your spent
+budgets and their reopen dates, and the verbatim rules you read yourself. It
+wins on any disagreement with this file.
 
 **Posture is `draft_only` on every row and cannot be anything else** (see
 SKILL.md). The columns that vary are the product budget, the status, and the
@@ -18,7 +24,7 @@ CLOSED = banned or competitor-run; never post, read for intel only.
 
 | Sub | Verdict | Product budget | Status | Reason, in their words | Read |
 | --- | --- | --- | --- | --- | --- |
-| r/SaaS | VALUE | ZERO. Rule 11 bans tools that "generate, suggest, schedule, detect opportunities, automate, or coordinate promotional posts"; we are that tool by name | open, bots installed | Rule 4 bans AI-generated text outright; Scan Slop and Bot Bouncer installed | 2026-08-22 |
+| r/SaaS | VALUE | ZERO. Rule 11 bans tools that "generate, suggest, schedule, detect opportunities, automate, or coordinate promotional posts"; an agent-drafted reply is inside that wording | open, bots installed | Rule 4 bans AI-generated text outright; Scan Slop and Bot Bouncer installed | 2026-08-22 |
 | r/AISearchOptimizers | HOME | one disclosed mention per thread where it adds value; MegaThread for a pitch | open | Rule 6: self-promotion allowed if disclosed, relevant, and adds value beyond promotion | 2026-08-22 |
 | r/aeo | HOME | one link, then treat it as spent for 30 days | open | "No spam or aggressive self-promotion; recommendations welcome" | 2026-08-22 |
 | r/SEO_for_AI | HOME | disclosed | open | "Be honest when self-promoting"; mod Ann Smarty | 2026-08-22 |
@@ -47,17 +53,19 @@ CLOSED = banned or competitor-run; never post, read for intel only.
 | r/GetMentionsAI | CLOSED | none | competitor-run | a rival's own sub | 2026-08-22 |
 | r/ParseAI | CLOSED | none | competitor-run | Parse's own sub (parse.gl); OP is a mod | 2026-08-22 |
 
-## The site-wide cadence rule (binding until the founder changes it)
+## The site-wide cadence rule (carry this into your own table)
 
 Unlimited value comments, each different, never pasted between threads, no
 two one-liners in a row. ONE product name or link per day site-wide, and only
-where the table allows. Zero on r/SaaS. Two weeks of karma before anything
-heavier. Bot Bouncer is cross-sub: a flag on r/SEO, r/DigitalMarketing,
-r/content_marketing or r/Entrepreneur follows the account everywhere.
+where your row allows it. Zero wherever the row says zero. Two weeks of karma
+before anything heavier. Moderation bots are cross-sub: Bot Bouncer runs in
+several of the rooms above, and a flag in any one of them follows the account
+everywhere.
 
 ## Adding a venue
 
 One row, with the date you read the rules and their words in the reason
-column. A row with no reason is a row somebody will delete. If a sub is not
-in this table, its posture is still `draft_only` and its product budget is
-ZERO until someone reads its rules.
+column. A row with no reason is a row somebody will delete. A sub with no
+row in your `RULES.md` is unknown, not open: its posture is still
+`draft_only` and its product budget is ZERO until you read its rules
+yourself and write the row.

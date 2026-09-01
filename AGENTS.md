@@ -101,15 +101,18 @@ live in `tells/EXCEPTIONS.md`.
 When the person you work for wants Reddit worked as a channel (find the
 threads worth answering, draft replies, keep the account safe), read
 `skills/reddit-desk/SKILL.md` in full before doing anything on Reddit, and
-follow its order: reconcile first, check the ban state before drafting, read
-`product-context/PRODUCT.md` for the channels and the never-say list, stay
-inside each subreddit's own rules and budget, run the near-duplicate gate, and
-never post, vote or DM. The person posts, in their own words, always.
+follow its order: build the venue list first, reconcile, check the ban state
+before drafting, read `product-context/PRODUCT.md` for the channels and the
+never-say list, stay inside each subreddit's own rules and budget, run the
+near-duplicate gate, and never post, vote or DM. The person posts, in their
+own words, always.
 
 Data lives in `reddit/` under the estate (`REDDIT_DESK=/path` moves this desk
-alone). Seed files to copy in on first run:
-`skills/reddit-desk/seed/VENUES.md` as the starting `RULES.md`, and
-`skills/reddit-desk/seed/CLAIMS_TEMPLATE.md` as the claim library. The first
+alone). The venue list is not shipped: step 0 finds the subs this person's
+buyers actually use and writes a dated row per sub into `RULES.md` from each
+sub's own rules page. `skills/reddit-desk/seed/VENUES.md` shows the row format
+and doubles as a starting set if those buyers are in AI search, SEO or SaaS.
+Copy `skills/reddit-desk/seed/CLAIMS_TEMPLATE.md` in as the claim library. The first
 run is `python3 skills/reddit-desk/scripts/reconcile.py` then
 `python3 skills/reddit-desk/scripts/reindex.py`, and both work on an estate
 that does not exist yet.

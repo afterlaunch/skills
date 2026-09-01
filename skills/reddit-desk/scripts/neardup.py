@@ -2,11 +2,12 @@
 """The near-duplicate gate: is this draft too close to anything we posted or
 drafted in the last N hours?
 
-Why it exists. r/AISearchLab rule 6: "posting the same or almost the same
-comment in more than one thread within 24 h is spam", a 7-day ban, then
-permanent. Rule 5 of r/SaaS, Bot Bouncer and Scan Slop catch the same shape
-site-wide. So a cross-thread near-duplicate is a BAN risk, not a style note,
-and a mention counter cannot see it. This does.
+Why it exists. Subs write this rule down, and one in seed/VENUES.md puts it
+plainly: "posting the same or almost the same comment in more than one thread
+within 24 h is spam", a 7-day ban, then permanent. Where no rule says it, a
+moderation bot catches the shape anyway. So a cross-thread near-duplicate is a
+BAN risk in any room, not a style note, and a mention counter cannot see it.
+This does.
 
 It is a token-overlap (Jaccard) check over the draft bodies in drafts/*.md.
 Pure, offline, deterministic. It flags; a session decides. A flag means "read

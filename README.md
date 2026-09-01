@@ -45,7 +45,7 @@ idea from your content ingestion async pipeline instead of randomly generating s
 If used well, you can mine active social topics and threads on communities to find in-vogue topics and come up with your own perspective.
 You can build a pretty great content calendar.
 
-Nobody runs out of ideas. They run out of things they wrote down. 
+Nobody runs out of ideas. They run out of the ones they forgot to write down. 
 This becomes your always accessible note-taker-brain interface directly connected to your content and product dev pipeline, 
 so you can go from idea to quality shipped assets in no time.
 

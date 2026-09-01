@@ -183,13 +183,85 @@ def main() -> int:
     check('no account state in the seed (bans and reopen dates live in YOUR RULES.md)',
           'BANNED 20' not in venues and 'reopens 20' not in venues, '')
 
+    # THE SKILL MUST TEACH A READER TO BUILD THEIR OWN VENUE LIST. The desk
+    # shipped once with no discovery step at all: it told a new reader to copy
+    # the seed in as their RULES.md and swept on, so anyone whose buyers are
+    # not in the seed's rooms inherited a rulebook for somebody else's market
+    # (founder, 2026-09-02). Three checks, and each is worth reading for what
+    # it does NOT do. The first two are presence tests: a section teaching
+    # venue discovery exists, it comes before the ban check, and it says an
+    # unrecorded sub gets no draft. Presence alone is weak, and QA proved it:
+    # a mutant that put the old copy-the-seed instruction BACK while keeping
+    # the discovery section passed both of them clear (2026-09-02). So the
+    # third asserts the ABSENCE of the defect itself, and it is the one that
+    # actually pins the bug. Wording is not the invariant either way: a real
+    # rewrite of the section still passes all three.
+    skill = (SKILL / 'SKILL.md').read_text()
+    bodies = re.split(r'^### .*$', skill, flags=re.M)[1:]
+
+    def first(pred) -> int:
+        return next((i for i, b in enumerate(bodies) if pred(b)), -1)
+
+    ban = first(lambda b: 'user_is_banned' in b)
+    discovery = first(lambda b: (
+        'RULES.md' in b
+        and re.search(r'\brules page\b', b, re.I)
+        and re.search(r'\brow\b', b, re.I)
+        and re.search(r'buyers|customers', b, re.I)
+    ))
+    check('the session starts by discovering YOUR venues, before the ban check',
+          0 <= discovery < ban, f'discovery={discovery} ban={ban}')
+    check('a sub with no row is unknown, and gets no draft',
+          discovery >= 0 and re.search(r'no row', bodies[discovery], re.I) is not None
+          and re.search(r'unknown', bodies[discovery], re.I) is not None,
+          bodies[discovery] if discovery >= 0 else '')
+
+    # And the rule is enforced where an unswept thread arrives, not only
+    # asserted in step 0. A thread handed straight to the desk misses the
+    # sweep and the ban check, which both read the table, so classification
+    # is the last gate before a draft. The property is that the classify step
+    # reads the table and says what happens when the row is missing; whether
+    # it stops there or writes the row in place is a wording choice, and this
+    # deliberately does not pin which.
+    classify = first(lambda b: 'SKIP' in b and 'INTEL' in b)
+    check('classification itself gates on the row, so a hand-dragged thread cannot slip past',
+          classify >= 0 and 'RULES.md' in bodies[classify]
+          and re.search(r'no row', bodies[classify], re.I) is not None,
+          bodies[classify] if classify >= 0 else '')
+
+    # The defect in its own words: the seed standing in as the rulebook. Read
+    # as a target, not a verb list, because "use|copy" plus two filenames also
+    # matches the honest sentences that teach the row FORMAT, and a guard that
+    # fails on good writing is one somebody edits out in a hurry. A negated
+    # sentence ("never copy a row from the seed into RULES.md") is a
+    # prohibition, so it is skipped by the same reasoning.
+    adopt = re.compile(
+        r'VENUES\.md[^.]{0,80}\b(as|becomes)\b[^.]{0,40}`?(your |the )?`?RULES\.md'
+        r'|VENUES\.md[^.]{0,100}RULES\.md[^.]{0,25}starting point'
+        r'|VENUES\.md[^.]{0,60}\bas\b[^.]{0,30}(your |the )?(rulebook|venue list|rules file)'
+        r'|(cop\w+|adopt\w*|reus\w+)[^.]{0,60}VENUES\.md[^.]{0,60}\b(to|as|into|for)\b'
+        r'[^.]{0,30}`?(your |the )?`?RULES\.md',
+        re.I)
+    hits = [m for m in adopt.finditer(skill)
+            if not re.search(r"\b(never|not|don't)\b", skill[max(0, m.start() - 45):m.start()], re.I)]
+    check('the skill never tells a reader to adopt the seed as their RULES.md',
+          not hits, hits[0].group(0) if hits else '')
+
+    # And the seed must not present itself as the map. Same defect, other end:
+    # a file that reads like the definitive venue list is one a reader adopts
+    # whole. Its preamble has to name itself an example and a starting set,
+    # and send a reader whose market is elsewhere to find their own rooms.
+    preamble = venues.split('| Sub |')[0]
+    check('the seed presents itself as an example and a starting set, not the map',
+          all(re.search(pat, preamble, re.I) for pat in
+              [r'\bexample\b', r'starting set', r'your own']), preamble)
+
     for name in ['SKILL.md', 'seed/VENUES.md', 'seed/CLAIMS_TEMPLATE.md']:
         text = (SKILL / name).read_text()
         check(f'no em-dash in {name}', '\u2014' not in text, '')
 
-    text = (SKILL / 'SKILL.md').read_text()
     check('the skill never posts (the words are present, all three)',
-          text.count('draft_only') >= 3 and 'never be one' in text, '')
+          skill.count('draft_only') >= 3 and 'never be one' in skill, '')
 
     print('---')
     print('CLEAR' if not FAILURES else f'{len(FAILURES)} FAILED: {FAILURES}')
