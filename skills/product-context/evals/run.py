@@ -38,12 +38,20 @@ def main() -> int:
     numbered = re.findall(r'^\d+\. \*\*', section, re.M)
     check('the file answers nine questions', len(numbered) == 9, f'found {len(numbered)}')
 
+    # THE HANDOFF. Every reader opens one exact string, so the file has to
+    # name it. This is pinned rather than trusted because it is precisely
+    # what went missing: the skill the pack calls "start here" described its
+    # own location in prose, and no skill could act on the description.
+    check('names the estate variable', 'SKILLS_ESTATE' in text)
+    check('names the file and its directory concretely',
+          '~/.claude/content/product-context/PRODUCT.md' in text)
+
     # The honesty mechanic must survive any future edit.
     check('unverified fields stay marked rather than filled', 'UNKNOWN' in text)
     check('never invents a claim', 'Never write a claim into this file' in text)
 
     # House rules.
-    check('no em-dash', '—' not in text)
+    check('no em-dash', '\u2014' not in text)
     check('no exclamation mark', '!' not in text)
     check('no americanised -ize spellings',
           not re.search(r'\b\w+iz(e|ed|es|ing|ation)\b', text))
@@ -61,7 +69,15 @@ def main() -> int:
     check('no personal identity', not re.search(private, text, re.I))
     check('no credential-shaped strings',
           not re.search(r'(sk-[A-Za-z0-9]{8,}|AKIA[0-9A-Z]{12,}|Bearer [A-Za-z0-9._-]{10,})', text))
-    check('no home paths', not re.search(r'/Users/[a-z]|~/\.claude/content', text))
+    # A path off one person's machine is both a leak and a bug for every
+    # other reader, so it still fails. The pack's DOCUMENTED default estate is
+    # not that: it is the one string every skill has to name for the handoff
+    # to exist. Banning it is why this file once described its own location in
+    # prose, which no reader could act on. So: strip the documented default
+    # and anything under it, then any home path still standing is a real one.
+    stripped = re.sub(r'~/\.claude/content(?:/[\w.-]+)*', '', text)
+    check('no machine-specific home paths',
+          not re.search(r'/Users/[a-z]|/home/[a-z]|~/', stripped))
 
     # The write surface: this skill only ever reads, plus one optional record.
     verbs = set(re.findall(r'`(get_\w+|list_\w+|\w+_move|\w+_draft|record_insight)`', text))

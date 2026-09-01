@@ -63,16 +63,23 @@ answerable once the earlier ones are honest.
 
 ## Where the file lives
 
-In your own workspace, at the path this pack uses for its estate: a
-directory you own, on your machine, that every skill reads and writes.
-Point it somewhere else with the environment variable the pack documents;
-unset, it defaults to the standard location.
+One file, `PRODUCT.md`, in `product-context/` under the estate this pack
+shares: `SKILLS_ESTATE`, which defaults to `~/.claude/content`. On a default
+install that is `~/.claude/content/product-context/PRODUCT.md`. Create the
+directory if it is not there.
+
+The exact path is the whole handoff, so it is worth being boring about. Every
+skill below reads that string and no other. A context file written anywhere
+else is a context file nothing ever opens, and the drafts go back to being
+generic without anyone being told why.
 
 Treat the file as private working material, not as a public document. It
 holds things you have not published and possibly things you never will.
 Nothing in this pack sends it anywhere.
 
 ## How the other skills use it
+
+Each of these opens `product-context/PRODUCT.md` at that path by name.
 
 - `voice` reads it before calibrating, so the forced choices are about your
   register rather than about writing in general.

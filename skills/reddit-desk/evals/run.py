@@ -45,13 +45,27 @@ DRAFT = (
 
 def main() -> int:
     with tempfile.TemporaryDirectory() as td:
-        ws = Path(td)
-        (ws / 'drafts').mkdir()
-        # Both draft shapes the estate has really carried: a '### Text' block
-        # (suffix included, the exact form that once slipped past the parser)
-        # and a lettered blockquote section.
+        ws = Path(td) / 'desk'
+        (ws / 'drafts').mkdir(parents=True)
+        # The shape SKILL.md actually prescribes: "Write each draft under its
+        # own '### Text' heading in drafts/<date>.md", at the top level of the
+        # file, with NO enclosing '## ' section. This fixture used to wrap the
+        # draft in one, so the eval gave positive confidence on the one shape
+        # that worked while the shape readers are TOLD to write read as zero
+        # drafts and the gate reported a clear file it had never opened
+        # (QA, 2026-09-01). The heading suffix stays: it is the exact form that
+        # slipped past the parser once before.
         (ws / 'drafts' / '2026-01-01.md').write_text(
-            '# drafts\n\n## Draft A\n\n### Text as loaded (v2)\n\n' + DRAFT + '\n\n---\n'
+            '# 2026-01-01 drafts\n\nThread: r/example, "a thread"\n'
+            'Why this thread: they asked how to measure.\nClaims used: C1.\n\n'
+            '### Text as loaded (v2)\n\n' + DRAFT + '\n\n---\n'
+        )
+        # The nested shape stays pinned beside it, because the estate carries
+        # files where a '### Text' block does sit under a '## ' section, and a
+        # fix for the top-level shape must not be bought with that one.
+        (ws / 'drafts' / '2026-01-04.md').write_text(
+            '# 2026-01-04 drafts\n\n## Draft A. r/example, "a thread"\n\n'
+            'Claims used: C1.\n\n### Text\n\n' + DRAFT + '\n\n---\n'
         )
         (ws / 'drafts' / '2026-01-02.md').write_text(
             '# drafts\n\n## B. r/example, "a thread"\n\nClaims used: C1.\n\n'
@@ -65,7 +79,29 @@ def main() -> int:
         )
 
         r = neardup(ws, '--file', str(ws / 'drafts' / '2026-01-01.md'))
-        check('suffixed ### Text heading is read as a draft', '1 drafts read' in r.stdout, r.stdout)
+        check('a draft written as SKILL.md prescribes, at the top level, is read',
+              '1 drafts read' in r.stdout, r.stdout)
+
+        r = neardup(ws, '--file', str(ws / 'drafts' / '2026-01-04.md'))
+        check('a suffix-free ### Text block nested under a ## section is read too',
+              '1 drafts read' in r.stdout, r.stdout)
+
+        # The property rather than the parse. Two near-same comments in one
+        # file written exactly as prescribed are the 7-day-ban shape, and this
+        # is what the gate is FOR: it must flag them, not report a clear file
+        # it never opened. Its own workspace, so the corpus above cannot make
+        # it pass for the wrong reason.
+        ws2 = Path(td) / 'prescribed'
+        (ws2 / 'drafts').mkdir(parents=True)
+        (ws2 / 'drafts' / '2026-01-01.md').write_text(
+            '# 2026-01-01 drafts\n\nThread: r/example, "one thread"\nClaims used: C1.\n\n'
+            '### Text\n\n' + DRAFT + '\n\n---\n\n'
+            'Thread: r/example, "another thread"\nClaims used: C1.\n\n'
+            '### Text\n\n' + DRAFT + '\n'
+        )
+        r = neardup(ws2, '--file', str(ws2 / 'drafts' / '2026-01-01.md'))
+        check('two near-same drafts in a prescribed-format file FLAG, never clear',
+              r.returncode == 1 and 'NEAR-DUPLICATE' in r.stdout, r.stdout + r.stderr)
 
         r = subprocess.run(
             [sys.executable, str(SKILL / 'scripts' / 'neardup.py'), '--hours', '100000'],
@@ -89,6 +125,53 @@ def main() -> int:
         r = neardup(ws, '--file', str(ws / 'drafts' / '2026-01-03.md'))
         check('a quoted sub rule is not read as our draft', '0 drafts read' in r.stdout, r.stdout)
 
+    # THE DOCUMENTED FIRST RUN, on an estate that does not exist yet:
+    # reconcile then reindex, with no comment history to paste. It used to end
+    # in a traceback, so the desk's own prescribed opening move failed for
+    # every new reader. Both halves are pinned here.
+    def desk(estate: Path):
+        env = {k: v for k, v in os.environ.items() if k != 'REDDIT_DESK'}
+        env['SKILLS_ESTATE'] = str(estate)
+
+        def run(script: str, *args: str) -> subprocess.CompletedProcess:
+            return subprocess.run(
+                [sys.executable, str(SKILL / 'scripts' / script), *args],
+                env=env, input='', capture_output=True, text=True,
+            )
+        return run
+
+    with tempfile.TemporaryDirectory() as td:
+        estate = Path(td) / 'estate'  # deliberately never created
+        run = desk(estate)
+
+        r = run('reconcile.py')
+        check('first run: reconcile on a fresh estate does not traceback',
+              'Traceback' not in r.stderr, r.stderr)
+        r = run('reindex.py')
+        check('first run: reindex on a fresh estate does not traceback',
+              r.returncode == 0 and 'Traceback' not in r.stderr, r.stderr + r.stdout)
+        check('first run: an empty board is written anyway',
+              (estate / 'reddit' / 'BOARD.md').is_file())
+
+        # --file is a READ, and it is contained to the workspace. A reader
+        # that opens any absolute path on the machine is a wider surface than
+        # a desk needs, and a missing path answers in a line, not a traceback.
+        r = run('neardup.py', '--file', '/etc/passwd')
+        check('neardup refuses a file outside the workspace',
+              r.returncode == 2 and 'refused' in r.stderr, r.stderr)
+        r = run('neardup.py', '--file', str(estate / 'reddit' / 'drafts' / 'absent.md'))
+        check('neardup fails politely on a missing file',
+              r.returncode == 2 and 'Traceback' not in r.stderr, r.stderr)
+
+    with tempfile.TemporaryDirectory() as td:
+        # A permalink on an estate whose PARENT does not exist either: the
+        # directory has to be made with its parents or this crashes.
+        estate = Path(td) / 'estate'
+        r = desk(estate)('reconcile.py',
+                         'https://reddit.com/r/example/comments/1abc/x/comment/p123/')
+        check('first run: a permalink files a thread on a fresh estate',
+              r.returncode == 0 and 'Traceback' not in r.stderr, r.stderr + r.stdout)
+
     # The venue matrix: every row carries a dated read and a reason; no
     # account-specific state ships in the seed; house style holds.
     venues = (SKILL / 'seed' / 'VENUES.md').read_text()
@@ -102,7 +185,7 @@ def main() -> int:
 
     for name in ['SKILL.md', 'seed/VENUES.md', 'seed/CLAIMS_TEMPLATE.md']:
         text = (SKILL / name).read_text()
-        check(f'no em-dash in {name}', '—' not in text, '')
+        check(f'no em-dash in {name}', '\u2014' not in text, '')
 
     text = (SKILL / 'SKILL.md').read_text()
     check('the skill never posts (the words are present, all three)',

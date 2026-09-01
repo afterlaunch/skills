@@ -13,14 +13,25 @@ what every serious posting skill does.
 
 ## Read first
 
+- `product-context/PRODUCT.md` in the estate
+  (`~/.claude/content/product-context/PRODUCT.md` by default), before
+  anything else. It says what this product is, who it is for, the words it
+  keeps, the words it refuses and what it will never say. The refused words
+  and the never-say list are absolute; a field marked `UNKNOWN` is a gap to
+  ask about, not one to fill.
+  **If the file is not there, stop. Do not draft.** Say so in one line and
+  ask for the suite's `product-context` skill to be run first. Without it a
+  draft invents the company it is describing, plausibly enough that nobody
+  catches it for months, and every draft after inherits the invention.
 - `STYLE.md` always. It is the sniff test: would a reader assume a machine
   wrote this. Nothing else matters if that fails.
-- Your own voice. If the suite's `voice` skill has written a profile (its
-  own workspace, default `~/.claude/content/voice`, override `SKILLS_ESTATE`),
-  read `profile.json` and whatever style notes it derived. Read real
-  samples too if you keep any (see "Where things live" below): a real
-  sample that actually landed beats a description of your voice every
-  time.
+- Your own voice. If the suite's `voice` skill has written a profile (in
+  `voice/` under the same estate, default `~/.claude/content/voice`), read
+  `VOICE.md` first: that is the style written as instructions a writer can
+  follow. Then `profile.json` for the raw counts behind it, which are
+  evidence rather than guidance. Read real samples too if you keep any, from
+  `voice/samples/` where `voice` keeps them: a real sample that actually
+  landed beats a description of your voice every time.
 - If neither a profile nor a sample exists, say so plainly before drafting.
   Work from `STYLE.md` alone, which is generic craft rather than your own
   calibrated register, and treat the first few drafts as a starting point
@@ -31,15 +42,17 @@ what every serious posting skill does.
 
 ## Where things live
 
-The skill is code. What it writes belongs in a workspace directory OUTSIDE
-any repo: `~/.claude/content/draft` by default, `SKILLS_ESTATE=/path` points
-it anywhere else.
+The skill is code. What it writes belongs in the estate this suite shares,
+OUTSIDE any repo: `SKILLS_ESTATE`, which defaults to `~/.claude/content`.
+`SKILLS_ESTATE` is the ROOT, and every skill in the pack keeps its own
+subdirectory under it, so one variable configures the whole pack. This
+skill's own is `draft/`.
 
-| Path (in the workspace) | What it is | Written by |
+| Path (in the estate) | What it is | Written by |
 | --- | --- | --- |
-| `LEDGER.md` | Every post that went out: date, format, angle, what it drew on, where it went, later how it did | the session, after a post ships |
-| `samples/` | Your own posts that actually landed, one per file, plain text | you, over time |
-| `drafts/<date>.md` | The drafts from a session, one `### Text` heading per platform | a session |
+| `draft/LEDGER.md` | Every post that went out: date, format, angle, what it drew on, where it went, later how it did | the session, after a post ships |
+| `voice/samples/` | Your own posts that actually landed, one per file, plain text. It sits under `voice/`, not here, because `voice` owns it and reads it too | you, over time |
+| `draft/drafts/<date>.md` | The drafts from a session, one `### Text` heading per platform | a session |
 
 First run: nothing is created for you. Start `LEDGER.md` with a one-line
 header the first time you file a post.
@@ -133,7 +146,7 @@ you. What this skill can do is teach the method:
   first.
 - **Real samples beat a written description**, once you have some. A post
   that actually landed carries rhythm and word choices no preference test
-  reaches. Drop your best-performing ones into `samples/` as they
+  reaches. Drop your best-performing ones into `voice/samples/` as they
   accumulate; you do not have to sit down and invent them.
 - **Decide your posture once, in writing, rather than reinventing it every
   post.** Do you show the work as it happens, or only publish findings

@@ -102,6 +102,14 @@ sight. INTEL goes to your notes, not to a draft.
 
 ### 4. Draft, against the claim library, inside the budget.
 
+- **Read the product context before the first draft of the session.** It is
+  `product-context/PRODUCT.md` in the estate
+  (`~/.claude/content/product-context/PRODUCT.md` by default). Two lists in
+  it bind this desk. The publishing channels: a venue ruled out there is
+  CLOSED here whatever the venue table says, because the venue table knows
+  the sub's rules and not your posture. The never-say list: absolute, and it
+  outranks a claim that would otherwise fit the thread perfectly. If the file
+  is missing, say so in one line before any draft is shown.
 - The number, its scope, and nothing else. The caveat travels with every
   number (`CLAIMS.md`, the top of the file); a number without its scope is
   the thing that gets us caught out, and stating the limit is why ours get

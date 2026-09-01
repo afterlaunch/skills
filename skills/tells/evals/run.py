@@ -49,7 +49,7 @@ def main() -> int:
 
     # House style, across every file this skill ships.
     for name, text in texts.items():
-        check(f'no em-dash in {name}', '—' not in text)
+        check(f'no em-dash in {name}', '\u2014' not in text)
         check(f'no exclamation mark in {name}',
               '!' not in text.replace('exclamation', ''))
         # A banned-vocabulary register is allowed to name the American
@@ -85,8 +85,18 @@ def main() -> int:
     # The workspace path is configurable, and no bare unnamespaced
     # estate path or literal home path leaked in.
     check('workspace path is configurable via env var', 'SKILLS_ESTATE' in skill)
+    # Namespaced means: the estate ROOT plus a skill's own subdirectory. Two
+    # are legitimate here, this skill's own and product-context's, whose
+    # refused-words list this audit checks against. Anything else under the
+    # root is a leftover from an internal version.
     check('no bare unnamespaced content-estate path',
-          not re.search(r'~/\.claude/content/(?!tells)', everything))
+          not re.search(r'~/\.claude/content/(?!tells|product-context)', everything))
+
+    # The refused words are half this audit's vocabulary, and the register
+    # cannot carry them: they are per-business, not generic.
+    check('checks the refused words from the product context file',
+          '~/.claude/content/product-context/PRODUCT.md' in skill
+          and 'refused' in skill.lower())
     home_path = '/' + 'Users/[a-z]'
     check('no literal filesystem home path', not re.search(home_path, everything, re.I))
 

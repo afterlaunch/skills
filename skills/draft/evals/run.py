@@ -38,7 +38,7 @@ def main() -> int:
 
     # House style, across every file this skill ships.
     for name, text in texts.items():
-        check(f'no em-dash in {name}', '—' not in text)
+        check(f'no em-dash in {name}', '\u2014' not in text)
         check(f'no exclamation mark in {name}',
               '!' not in text.replace('exclamation', ''))
         # American -ize spellings fail, with one documented exception: a
@@ -54,11 +54,26 @@ def main() -> int:
     check('promises three hooks', 'three hook' in skill.lower() or 'Three hooks' in skill)
     check('never one finished post', 'one finished post' in skill.lower())
 
+    # THE REFUSAL. Reading the context file first, and stopping when it is
+    # absent, is the mechanic that keeps this suite from writing confident
+    # marketing for a company it invented from a landing page. product-context
+    # claimed this behaviour existed here while it did not, so it is pinned
+    # rather than trusted.
+    read_first = skill.split('## Read first', 1)[1].split('\n## ', 1)[0]
+    check('reads the product context file, by its exact path',
+          '~/.claude/content/product-context/PRODUCT.md' in read_first)
+    check('refuses to draft when the context file is missing',
+          re.search(r'[Dd]o not draft|stop\.', read_first) is not None)
+
     # The workspace path is configurable, and the skill does not hardcode
     # a bare, unnamespaced estate path left over from an internal version.
     check('workspace path is configurable via env var', 'SKILLS_ESTATE' in skill)
+    # Namespaced means: the estate ROOT plus a skill's own subdirectory. The
+    # three this skill legitimately names are its own, voice's (where the
+    # profile and the samples live) and product-context's (the file it reads
+    # before it writes a word). Anything else under the root is a leftover.
     check('no bare unnamespaced content-estate path',
-          not re.search(r'~/\.claude/content/(?!draft|voice)', everything))
+          not re.search(r'~/\.claude/content/(?!draft|voice|product-context)', everything))
     home_path = '/' + 'Users/[a-z]'
     check('no literal filesystem home path', not re.search(home_path, everything, re.I))
 

@@ -17,6 +17,10 @@ HERE=os.path.abspath(os.environ.get('REDDIT_DESK')
                      or os.path.join(os.environ.get('SKILLS_ESTATE')
                                      or os.path.expanduser('~/.claude/content'), 'reddit'))
 TD=os.path.join(HERE,'threads')
+# A fresh estate has no threads/ yet, and the documented first run reaches
+# here with nothing filed. That is an empty board, not an error, so create the
+# directory rather than dying on listdir.
+os.makedirs(TD,exist_ok=True)
 FIELDS=['Sub','Id','URL','Posted','First seen','Last checked','Status','Our reply','Product','Claims','Why']
 def parse(p):
     t=open(p,encoding='utf-8').read()
@@ -53,4 +57,5 @@ out.append('| Sub | Newest id seen |'); out.append('| --- | --- |')
 for s,(v,i) in sorted(wm.items()): out.append(f'| {s} | `{i}` |')
 out.append('')
 open(os.path.join(HERE,'BOARD.md'),'w',encoding='utf-8').write('\n'.join(out))
-print(f'BOARD.md rebuilt: {len(rows)} threads, {len(wm)} subs')
+print(f'BOARD.md rebuilt: {len(rows)} threads, {len(wm)} subs'
+      +('. Nothing filed yet: sweep a tracked sub to fill it.' if not rows else ''))

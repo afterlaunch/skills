@@ -114,6 +114,13 @@ def stub(sub: str, thread: str, comment: str | None) -> str:
 
 
 def main() -> int:
+    # The estate may not exist yet. The desk's documented first run is this
+    # script then reindex.py, and on a fresh machine there is no comment
+    # history to paste, so this used to return before creating threads/ and
+    # reindex.py died on the missing directory. Create it before any early
+    # return, parents included, so the first run works on an empty estate.
+    THREADS.mkdir(parents=True, exist_ok=True)
+
     raw = sys.argv[1:] or sys.stdin.read(MAX_INPUT_BYTES).split()
     if not raw:
         print('Nothing to reconcile. Paste comment permalinks, one per line.')
@@ -133,7 +140,6 @@ def main() -> int:
         print(f'No Reddit permalinks found in {len(raw)} lines. Nothing changed.')
         return 1
 
-    THREADS.mkdir(exist_ok=True)
     marked, already, created = [], [], []
 
     for (key, thread), (sub, comment) in sorted(seen.items()):

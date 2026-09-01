@@ -8,15 +8,24 @@ permanent. Rule 5 of r/SaaS, Bot Bouncer and Scan Slop catch the same shape
 site-wide. So a cross-thread near-duplicate is a BAN risk, not a style note,
 and a mention counter cannot see it. This does.
 
-It is a token-overlap (Jaccard) check over the draft bodies in drafts/*.md
-and the ledger's "What was posted" column, windowed by date. Pure, offline,
-deterministic. It flags; a session decides. A flag means "read both before
-posting", never "rewrite automatically".
+It is a token-overlap (Jaccard) check over the draft bodies in drafts/*.md.
+Pure, offline, deterministic. It flags; a session decides. A flag means "read
+both before posting", never "rewrite automatically".
+
+KNOWN LIMIT, stated because a safety gate must not overclaim: this compares
+DRAFTS against DRAFTS. It does not read REPLY_LEDGER.md, so it cannot see the
+text you actually posted. Since the drafts here are raw material for your own
+rewrite, the posted wording is the wording a ban attaches to, and that is the
+wording this cannot check. Read the ledger yourself before posting into a sub
+you have replied in recently. Wiring the ledger in is tracked in the backlog.
 
 Usage:
     python3 neardup.py < draft.txt
     python3 neardup.py --hours 48 < draft.txt
     python3 neardup.py --file drafts/2026-08-28.md   # check every draft in a file against the others
+
+--file reads a path inside the desk workspace and nowhere else. Anything
+outside it is refused in one line rather than opened.
 
 Exit 0 = clear, 1 = at least one near-duplicate flagged, 2 = usage.
 """
@@ -63,26 +72,50 @@ def jaccard(a: set[str], b: set[str]) -> float:
 MIN_WORDS = 20  # below this a block is a note, not a comment
 
 
+def text_blocks_in(chunk: str) -> list[str]:
+    """The body under every '### Text' heading in one chunk of markdown.
+
+    A '### Text' heading may carry a suffix ("### Text as loaded (v2)"), which
+    is exactly how the one LIVE, unsent draft was labelled on 2026-08-28; an
+    exact-line match silently skipped it (QA, 2026-08-30). Anchor on the
+    heading's start, not its whole line."""
+    out: list[str] = []
+    for block in re.split(r'^### Text\b.*$', chunk, flags=re.M)[1:]:
+        body = re.split(r'^---\s*$', block, maxsplit=1, flags=re.M)[0].strip()
+        if len(body.split()) >= MIN_WORDS:
+            out.append(body)
+    return out
+
+
 def bodies_in(text: str, name: str) -> list[tuple[str, str]]:
     """(label, body) for every draft in one file. Two shapes are read, because
     the estate carries both: a '### Text' block (2026-08-28 onwards), and a
     '## A. r/sub, "title"' section whose comment is the blockquoted lines
     (2026-08-22). A section with neither, such as a mod email, is not a
-    comment and is skipped."""
+    comment and is skipped.
+
+    A '### Text' block counts wherever it sits, nested under a '## ' section or
+    at the top level of the file. SKILL.md prescribes the top-level form, and
+    this used to read the '## '-delimited sections ONLY: a drafts file written
+    exactly as the skill instructs yielded '0 drafts read; clear', so the gate
+    passed because it had read nothing. A gate that is blind to the format its
+    own skill prescribes fails OPEN, and this one guards a 7-day ban that turns
+    permanent (QA, 2026-09-01)."""
     out: list[tuple[str, str]] = []
     n = 0
-    for section in re.split(r'^## ', text, flags=re.M)[1:]:
-        # A '### Text' heading may carry a suffix ("### Text as loaded (v2)"),
-        # which is exactly how the one LIVE, unsent draft was labelled on
-        # 2026-08-28; an exact-line match silently skipped it (QA, 2026-08-30).
-        # Anchor on the heading's start, not its whole line.
-        text_blocks = re.split(r'^### Text\b.*$', section, flags=re.M)[1:]
-        if text_blocks:
-            for block in text_blocks:
-                body = re.split(r'^---\s*$', block, maxsplit=1, flags=re.M)[0].strip()
-                if len(body.split()) >= MIN_WORDS:
-                    n += 1
-                    out.append((f'{name} draft {n}', body))
+    # Index 0 is whatever precedes the first '## ' heading, which on a file
+    # written as prescribed is every draft in it. It has no section heading, so
+    # only the '### Text' shape can be recognised there; the blockquote shape
+    # below needs a heading to tell our own draft from something we quoted.
+    sections = re.split(r'^## ', text, flags=re.M)
+    for i, section in enumerate(sections):
+        blocks = text_blocks_in(section)
+        if blocks:
+            for body in blocks:
+                n += 1
+                out.append((f'{name} draft {n}', body))
+            continue
+        if i == 0:
             continue
         # The blockquote shape (2026-08-22) is a draft only where the section
         # carries a draft marker; a blockquote elsewhere is something we QUOTED
@@ -130,8 +163,27 @@ def main() -> int:
     args = ap.parse_args()
 
     if args.file:
-        p = Path(args.file)
-        text = p.read_text(encoding='utf-8')
+        # --file is a READ, and a reader that will open any absolute path on
+        # the machine is a wider surface than this desk needs: the skill's
+        # promise is one workspace, and a promise scoped to writes alone is
+        # half a promise. Contain it, and answer both failure modes in a line
+        # rather than a traceback.
+        p = Path(args.file).resolve()
+        try:
+            p.relative_to(HERE)
+        except ValueError:
+            print(f'refused: {p} is outside the desk workspace ({HERE}). '
+                  'Pass a file inside it, or pipe the text in on stdin.',
+                  file=sys.stderr)
+            return 2
+        if not p.is_file():
+            print(f'no such file: {p}', file=sys.stderr)
+            return 2
+        try:
+            text = p.read_text(encoding='utf-8')
+        except (OSError, UnicodeDecodeError) as exc:
+            print(f'could not read {p} as text: {exc}', file=sys.stderr)
+            return 2
         flagged = 0
         drafts = bodies_in(text, p.name)
         for label, body in drafts:

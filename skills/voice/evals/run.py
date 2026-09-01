@@ -43,8 +43,13 @@ def main() -> int:
     check('writes into the shared estate, where draft reads it',
           'voice/' in text and '~/.claude/content' in text)
 
+    # The calibration reads the product context before the first pair, so the
+    # pairs are about this business rather than about writing in general.
+    check('reads the product context before calibrating',
+          '~/.claude/content/product-context/PRODUCT.md' in text)
+
     # House style: no em-dash, no exclamation mark, British spellings only.
-    check('no em-dash', '—' not in text)
+    check('no em-dash', '\u2014' not in text)
     check('no exclamation mark', '!' not in text)
     check('no americanised -ize spellings',
           not re.search(r'\b\w+iz(e|ed|es|ing|ation)\b', text))

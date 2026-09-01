@@ -21,6 +21,16 @@ causing that one.
 Read `TELLS.md` first. It is the single source; do not work from memory of
 it.
 
+Then read the words this business refuses. They live in
+`product-context/PRODUCT.md` in the estate
+(`~/.claude/content/product-context/PRODUCT.md` by default), in the refused
+words list and the never-say list. Each entry is a check in this run,
+exactly like a register entry: quote the line it turns up on and fix it. A
+refused word is a defect even where the register would have let it through,
+because the register is generic and that list is yours. If the file is not
+there, say so once in the report: the audit is running without half its
+vocabulary.
+
 ## What this catches that a green build does not
 
 A build can enforce the mechanical subset of this register (Part 3 is
@@ -116,13 +126,16 @@ compiles. They prove nothing about what a reader actually sees.
 
 ## Where things live
 
-The skill is code. Your own accepted exceptions live in a workspace
-directory OUTSIDE any repo: `~/.claude/content/tells` by default,
-`SKILLS_ESTATE=/path` points it anywhere else.
+The skill is code. Your own accepted exceptions live in the estate this
+suite shares, OUTSIDE any repo: `SKILLS_ESTATE`, which defaults to
+`~/.claude/content`. `SKILLS_ESTATE` is the ROOT, and every skill in the pack
+keeps its own subdirectory under it, so one variable configures the whole
+pack. This skill's own is `tells/`.
 
-| Path (in the workspace) | What it is |
+| Path (in the estate) | What it is |
 | --- | --- |
-| `EXCEPTIONS.md` | One line per defect you have already reviewed and deliberately decided to keep. Checked before anything is flagged again |
+| `tells/EXCEPTIONS.md` | One line per defect you have already reviewed and deliberately decided to keep. Checked before anything is flagged again |
+| `product-context/PRODUCT.md` | Read, never written here. The refused words and the never-say list this run checks against |
 
 First run: nothing is created for you, and the file is entirely optional.
 A run with no `EXCEPTIONS.md` just has nothing to skip yet.

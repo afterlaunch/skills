@@ -32,7 +32,7 @@ def main() -> int:
         check(f'section present: {heading}', heading in text)
 
     # House style: no em-dash, no exclamation mark, British spellings only.
-    check('no em-dash', '—' not in text)
+    check('no em-dash', '\u2014' not in text)
     check('no exclamation mark', '!' not in text.replace('exclamation', ''))
     check('no americanised -ize spellings',
           not re.search(r'\b\w+iz(e|ed|es|ing|ation)\b', text))

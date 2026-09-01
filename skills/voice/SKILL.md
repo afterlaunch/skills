@@ -39,6 +39,16 @@ skill in the suite reads and writes its own subdirectory of it.
 
 ## How a round runs
 
+Read the product context before the first pair. It is
+`product-context/PRODUCT.md` in the same estate
+(`~/.claude/content/product-context/PRODUCT.md` by default) and it says what
+this business is, who it is for, and which words it keeps and refuses. The
+pairs are then drawn from your own subject matter rather than from writing
+in general, and a refused word never turns up in a sentence you are asked to
+prefer, which would teach the profile the opposite of what you decided. If
+the file is not there, say so in one line and calibrate anyway: the test
+still works, the pairs are just blunter.
+
 1. **Read `profile.json`** if it exists. This is resumable: a round
    adds to what is there rather than starting again.
 2. **Choose which axes to test.** Read `AXES.md`. On a first run, cover
