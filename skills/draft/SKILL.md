@@ -50,7 +50,7 @@ skill's own is `draft/`.
 
 | Path (in the estate) | What it is | Written by |
 | --- | --- | --- |
-| `draft/LEDGER.md` | Every post that went out: date, format, angle, what it drew on, where it went, later how it did | the session, after a post ships |
+| `LEDGER.md` | Every post that went out: date, format, angle, what it drew on, where it went, later how it did. It sits at the estate ROOT, not under `draft/`, because other skills in the pack read the same ledger | the session, after a post ships |
 | `voice/samples/` | Your own posts that actually landed, one per file, plain text. It sits under `voice/`, not here, because `voice` owns it and reads it too | you, over time |
 | `draft/drafts/<date>.md` | The drafts from a session, one `### Text` heading per platform | a session |
 

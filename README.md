@@ -57,8 +57,9 @@ so you can go from idea to quality shipped assets in no time.
 
 ## The other five
 
-**`voice`** shows you two sentences, you pick the closer one. Out comes a
-profile the drafting skills obey.
+**`voice`** trains your own voice, the one your posts should sound like, by
+showing you two sentences at a time and asking which is closer. Your site
+already gave us your brand's voice; this is the other one.
 
 **`draft`** three hooks with the reasoning, then one draft per platform.
 

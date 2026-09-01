@@ -1,8 +1,14 @@
 # The axes
 
-Ten dimensions the calibration test measures. Each has two poles and a
+Eleven dimensions the calibration test measures. Each has two poles and a
 position between them. Nothing here is right or wrong; it is where a
 particular voice sits.
+
+They are not all the same KIND of thing, and the grouping below says so.
+The first family has precedent in the register and stance literature, so a
+lean on one of those axes means something outside this skill. The second
+family is craft rather than register. The third is one axis nobody has
+validated. Read a result with its group in mind.
 
 **Only genuinely variable things belong here.** Any hard rules already
 in force for this brand (no em-dashes, no aphorisms, no "it's not X
@@ -11,18 +17,46 @@ must not be re-litigated by a test item. Every option in every pair
 should obey them, so the test measures taste inside the allowed space
 rather than asking whether the rules apply.
 
+## Register and stance, with linguistic precedent
+
+Six of these track dimensions the register literature already
+measures; formality is the seventh, and the taxonomies treat formality
+and spoken versus written as separate continua rather than one. A
+formal email is written. A casual speech is spoken. A voice can sit
+anywhere on both.
+
 | # | Axis | Pole A | Pole B |
 | --- | --- | --- | --- |
 | 1 | Sentence length | Short, clipped, one clause | Longer, more clauses, flowing |
-| 2 | Opening | Cold open straight on the claim | Context first, then the claim |
-| 3 | Evidence order | Lead with the number | Lead with the situation |
+| 2 | Register | Spoken, casual | Written, precise |
+| 3 | Address | Speaks to "you" | States to the room |
 | 4 | Certainty | Flat assertion | Measured, room for doubt |
-| 5 | Address | Speaks to "you" | States to the room |
-| 6 | Register | Spoken, casual | Written, precise |
-| 7 | Technical density | Assumes the reader knows | Explains as it goes |
-| 8 | Humour | Dry, occasional | Straight throughout |
-| 9 | Self-reference | "I" and "we" visible | Subject forward, author invisible |
+| 5 | Technical density | Assumes the reader knows | Explains as it goes |
+| 6 | Self-reference | "I" and "we" visible | Subject forward, author invisible |
+| 7 | Formality | Plain and informal | Formal and careful |
+
+## Rhetorical structure, craft rather than register
+
+These three are real and worth measuring, but they are moves a writer
+makes rather than positions a voice holds. A lean here describes how
+pieces are built, not how they sound.
+
+| # | Axis | Pole A | Pole B |
+| --- | --- | --- | --- |
+| 8 | Opening | Cold open straight on the claim | Context first, then the claim |
+| 9 | Evidence order | Lead with the number | Lead with the situation |
 | 10 | Closing | Ends on the point | Ends on an invitation |
+
+## Unvalidated: no taxonomy covers this, included because the founder wanted it
+
+| # | Axis | Pole A | Pole B |
+| --- | --- | --- | --- |
+| 11 | Humour | Dry, occasional | Straight throughout |
+
+Treat a lean here as unknown signal rather than borrowed signal. It may
+be measuring something real about this person, and it may be measuring
+which of two invented sentences happened to land. Say so when reporting
+it.
 
 ## Writing a test item
 

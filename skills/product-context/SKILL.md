@@ -92,26 +92,61 @@ Each of these opens `product-context/PRODUCT.md` at that path by name.
 A field marked `UNKNOWN` propagates honestly: a skill that needs it says so
 rather than filling the gap.
 
-## With AfterLaunch connected (optional, and everything above works without it)
+## With AfterLaunch connected (five answers arrive drafted, four are asked)
 
-Everything above needs no key and no account. With one, the interesting
-thing is that most of this file already exists, because the product read
-your site and extracted the business context to write from.
+Everything above needs no key. With one, most of this file already exists,
+because the product read your site and extracted the business context it
+drafts from. Connected, the record is home and `PRODUCT.md` is a cache of it:
+read the record first, and fall back to the local file only when there is no
+key.
 
-- `get_snapshot` returns the extracted context: what the product understood
-  your business to be. Read it first and use it as the draft answer to
-  questions one, two and three, then correct it. Correcting a wrong
-  extraction is faster and more accurate than starting from nothing.
-- `list_kb_pages` and `get_kb_page` return the record's own pages on
-  positioning, the audience and the competitive set, which answer the middle
-  questions with something you have already reviewed.
-- `record_insight` sends a durable correction back the other way. If the
-  extraction had you wrong and you fix it here, record the correction in one
-  sentence so every future draft reads the corrected version rather than
-  re-learning it each time.
+Your brand voice is already here from your site; the voice skill trains your own.
 
-Without a key, the interview is the whole method and it takes about the same
-time as a coffee.
+All nine still go to the user: the drafted five are for confirming or
+correcting, not for skipping.
+
+**Read first, in this order.** `list_kb_pages` to see what is there, then
+`get_kb_page` on each of the four pages by slug, then `get_snapshot` for the
+positioning and the competitor set with the difference statement carried with
+each rival.
+
+**Drafted from the record, questions 1, 2, 3, 6 and 7.** Show what you found,
+question by question, as a draft answer to correct. Never present a page as
+settled: the pages are templated once from an automatic extraction and are
+not re-derived afterwards, so a live one can be stale or truncated
+mid-sentence. **A drafted answer the user does not explicitly confirm is
+never written into `PRODUCT.md`, and that field stays `UNKNOWN`.** Silence is
+not a yes.
+
+- **Question 1, what it is in customer words.** `about-my-business` holds the
+  category, the one-liner and the value proposition. Say plainly that those
+  three are written in marketing register, then ask for the sentence a
+  customer would actually use.
+- **Question 2, who it is for.** `my-audience`.
+- **Question 3, what they used before.** `my-competitors`, which is short,
+  plus the competitor set already read above.
+- **Question 6, the words you keep.** The "how I talk about it" phrases on
+  `about-my-business`, plus the characteristic phrases on `about-my-voice`.
+- **Question 7, the words you refuse.** The avoid list on `about-my-voice`
+  covers part of it. Ask for the rest.
+
+**Asked cold, questions 4, 5, 8 and 9.** What you can prove, what you claim
+and cannot prove, where you publish and where you do not, and what you will
+never say. The record cannot answer any of the four. Nothing read off a
+website knows what you would stand behind in public or what you refuse to
+say.
+
+**Send every answer back.** All nine, whether confirmed, corrected or
+answered cold, go back with `record_insight`, kind `fact`, one plain sentence
+of 10 to 500 characters, one insight per answer. That is what makes the
+product draft from the corrected version instead of re-learning the wrong
+one. `record_insight` is the only write this skill has: no tool writes a
+page, so a stale page is corrected by an insight rather than edited from
+here. Write the same answers into `PRODUCT.md` as well so the offline skills
+keep working, and treat that file as the copy rather than the original.
+
+Without a key nothing above changes: all nine questions get asked, anything
+unanswered stays `UNKNOWN`, and the file is the only home there is.
 
 ## What this skill cannot do
 

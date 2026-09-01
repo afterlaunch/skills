@@ -21,6 +21,34 @@ Picking between two sentences takes two seconds and needs no ideas. Do
 enough of them and a position emerges that no single sample could
 give.
 
+## Two voices, and which one this trains
+
+Open a first run with this, before anything else. Connected, verbatim:
+
+> There are two voices here. Your brand has one, and it is on your
+> website, so we have already read it. You have one too, and it is
+> different: it is how you write when it is you talking, on LinkedIn, on
+> X, in a Reddit reply. The website cannot teach us that one. You can, in
+> about two minutes, by picking between pairs of sentences until it is
+> clear which way you lean. Pages and listings get the brand voice.
+> Anything posted as you gets yours.
+
+With no key nothing has read the site and there is no brand register to
+hand, so the clause saying we already have comes out, and so do the two
+sentences about which surface gets which voice:
+
+> There are two voices here. Your brand has one, and it is on your
+> website. You have one too, and it is different: it is how you write
+> when it is you talking, on LinkedIn, on X, in a Reddit reply. The
+> website cannot teach us that one. You can, in about two minutes, by
+> picking between pairs of sentences until it is clear which way you
+> lean.
+
+Then ask which voice this round calibrates, and default to theirs.
+
+**Never call the brand register "your voice".** It came from the website,
+so it is the brand's. That one word is where the confusion lives.
+
 ## Where things live
 
 Two files, in the estate this suite shares: `voice/` under
@@ -37,6 +65,9 @@ skill in the suite reads and writes its own subdirectory of it.
 | `profile.json` | The raw state: per axis, the observation count and the split, plus the date of each round. Resumable by design. | every round |
 | `VOICE.md` | The style section rewritten as instructions a writer can follow. Written once there is enough to say something, not before. | every round with enough observations to update |
 
+Connected, both files are a cache of what was sent to the record, not the
+master copy. See the connected section below.
+
 ## How a round runs
 
 Read the product context before the first pair. It is
@@ -52,9 +83,11 @@ still works, the pairs are just blunter.
 1. **Read `profile.json`** if it exists. This is resumable: a round
    adds to what is there rather than starting again.
 2. **Choose which axes to test.** Read `AXES.md`. On a first run, cover
-   all ten. On a later run, put the questions toward the axes with the
-   fewest answers or the least agreement, because those are the ones
-   still moving.
+   all eleven. On a later run, put the questions toward the axes with
+   the fewest answers or the least agreement, because those are the
+   ones still moving. Note which family an axis belongs to: a lean in
+   the unvalidated group is reported as unknown signal, not as a
+   finding.
 3. **Write the items fresh.** Do not reuse pairs from a previous round;
    repeating an item measures memory rather than taste. Follow the
    item-writing rules in `AXES.md`: one axis varying, everything else
@@ -132,19 +165,52 @@ the profile. All three need a measurement this test does not have.
 The calibration itself needs no key: the pairs, the scoring and the
 profile it writes are the whole test. With an AfterLaunch key
 (`AFTERLAUNCH_API_KEY`, the remote MCP server at
-`https://afterlaunch.io/api/mcp`), the profile stops being a file only
-this skill reads:
+`https://afterlaunch.io/api/mcp`), the record is where the voice lives and
+the local files become a copy of what was sent. A site read already gives
+you the brand register; the personal one is what only this test can reach.
 
+- **Read the brand register first, before the first pair.** Call
+  `get_voice_profile`. It returns the structured voice the product itself
+  drafts in, tone and phrases and sentence style and what it avoids, with
+  a `source` field saying whether that came from the site or from uploaded
+  samples. Show it labelled plainly as the brand's voice. If the tool is
+  not available, which means an older deployment, fall back to
+  `get_kb_page` with slug `about-my-voice`, the rendered page of the same
+  thing. Either way the user sees the contrast before being asked to pick
+  anything, which is what the opening above is for.
+- **Send every lean back after the round.** For each axis with enough
+  observations to state a lean, one `record_insight` with kind `voice`:
+  one plain sentence in the user's own terms and nothing else, for example
+  "Voice leans to short clipped sentences over flowing ones." Between ten
+  and five hundred characters. One insight per axis, not one for the whole
+  round. An axis with too few observations to read is not a lean and is
+  not sent.
+  **Keep that sentence stable for the same axis and the same lean.** No
+  counts, no dates, no round number. The record supersedes an insight by
+  the text itself, so a stable sentence means a repeat round replaces the
+  earlier note cleanly, while a sentence carrying "7 of 9 picks" never
+  matches the next round and the contradictions pile up. Known limit: an
+  axis that FLIPS leaves the old sentence standing, because it is
+  different text. Say so when it happens rather than pretending the record
+  is clean.
+  There is a daily cap of 50 insights per product run. If a call comes
+  back `rate_limited`, stop sending, say so plainly, and note that the
+  local cache still holds the round.
 - **A draft already sitting on the board can be rewritten against the
-  fresh profile and saved back.** Find it with `list_feed` or
-  `get_move`, rewrite the copy against whatever this round changed,
-  and save it with `update_draft`. The voice just calibrated then
-  travels with every move that already has a draft, not only the ones
-  written after this round.
+  fresh profile and saved back.** Find it with `list_feed` or `get_move`,
+  rewrite the copy against whatever this round changed, and save it with
+  `update_draft`. The voice just calibrated then travels with every move
+  that already has a draft, not only the ones written after this round.
 
-Without a key, `VOICE.md` travels only as far as whatever reads that
-file by hand. The free scan at afterlaunch.io is the honest pointer
-otherwise, and skip the rest of this section.
+**Connected, the record is home.** `profile.json` and `VOICE.md` are a
+cache of what was sent: readable from a terminal, and they survive a
+dropped connection. They are not the master copy. A correction that never
+reached the record is a correction the product does not have.
+
+Without a key there is nothing to send to, so the local profile is the
+whole model, exactly as it works today, and `VOICE.md` travels only as far
+as whatever reads that file by hand. The free scan at afterlaunch.io is the
+honest pointer otherwise, and skip the rest of this section.
 
 ## House rules
 

@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 SKILL = Path(__file__).resolve().parent.parent / 'SKILL.md'
+AXES = Path(__file__).resolve().parent.parent / 'AXES.md'
 FAILURES: list[str] = []
 
 
@@ -66,7 +67,8 @@ def main() -> int:
     verbs = set(re.findall(r'`(\w+_move|\w+_draft|record_insight|get_\w+|list_\w+|ship_move)`', text))
     check('ship_move never appears', 'ship_move' not in text)
     check('no verb beyond the declared surface',
-          verbs <= {'update_draft', 'get_move', 'list_feed'})
+          verbs <= {'update_draft', 'get_move', 'list_feed', 'get_kb_page',
+                    'get_voice_profile', 'record_insight'})
 
     # Publication rule (docs/plans/DESK_CATALOGUE.md section 4b): no costs,
     # no product metrics, nothing reverse-engineerable, no founder identity.
@@ -92,6 +94,94 @@ def main() -> int:
     # exist in a standalone publish of this skill alone.
     check('no dangling cross-reference to an unpublished sibling skill',
           '../post/' not in text)
+
+    # --- Train 1: two voices, and the record is home. -------------------
+
+    # THE OPENING (research dossier section 9, founder-accepted verbatim). The
+    # user meets the two-voice idea here first, so the paragraph is pinned
+    # rather than paraphrased. Flattened, so re-wrapping the markdown is a
+    # good change that must not fail this.
+    opening = (
+        'There are two voices here. Your brand has one, and it is on your '
+        'website, so we have already read it. You have one too, and it is '
+        'different: it is how you write when it is you talking, on LinkedIn, '
+        'on X, in a Reddit reply. The website cannot teach us that one. You '
+        'can, in about two minutes, by picking between pairs of sentences '
+        'until it is clear which way you lean. Pages and listings get the '
+        'brand voice. Anything posted as you gets yours.')
+    offline = (
+        'There are two voices here. Your brand has one, and it is on your '
+        'website. You have one too, and it is different: it is how you write '
+        'when it is you talking, on LinkedIn, on X, in a Reddit reply. The '
+        'website cannot teach us that one. You can, in about two minutes, by '
+        'picking between pairs of sentences until it is clear which way you '
+        'lean.')
+    flat_all = re.sub(r'[\s>]+', ' ', text)
+    check('first-run opening paragraph present verbatim', opening in flat_all)
+    # With no key nothing read the site, so the offline variant drops the
+    # clause claiming we did and the two sentences about which surface gets
+    # which voice, because there is no brand register to give them.
+    check('offline variant of the opening present', offline in flat_all)
+    # The one word the dossier found the confusion living in.
+    check('states the rule: the site register is the brand\'s, never "your voice"',
+          'Never call the brand register "your voice"' in re.sub(r'\s+', ' ', text))
+
+    # The connected section is sliced out once and the next three checks run
+    # against that slice only, so a phrase in the offline half cannot satisfy
+    # a rule about the connected half.
+    start = text.find('## With AfterLaunch connected')
+    end = text.find('## House rules', start + 1)
+    check('connected section is present and bounded', start != -1 and end > start)
+    connected = re.sub(r'\s+', ' ', text[start:end] if start != -1 and end > start else '')
+
+    # THE WRITE-BACK. Every lean goes back to the record as a voice insight,
+    # one per axis. Without this the calibration dies in the terminal.
+    check('connected section sends every lean back as a voice insight',
+          'record_insight' in connected and 'kind `voice`' in connected)
+    check('the write-back is one insight per axis',
+          re.search(r'per axis', connected) is not None)
+    check('a thin axis is not sent',
+          'too few observations' in connected and 'not sent' in connected)
+    # The record supersedes by the text, so a count in the sentence means no
+    # two rounds ever collapse onto each other.
+    check('the insight sentence is stable per axis and lean',
+          'stable for the same axis and the same lean' in connected)
+    # The brand register is read before the first pair, off the markdown page.
+    check('connected section reads the brand register before the first pair',
+          'get_voice_profile' in connected)
+    check('connected section keeps the rendered page as the fallback',
+          'get_kb_page' in connected and 'about-my-voice' in connected
+          and 'fall back' in connected)
+
+    # THE HOME. Connected, the record is the master copy and the local files
+    # are a cache. Anything that reinstates the local model as the home is the
+    # bug this train exists to fix.
+    check('connected section names the record as home',
+          'the record is home' in connected.lower())
+    check('connected section calls the local files a cache',
+          'cache' in connected)
+
+    # THE AXES. Eleven, in exactly three labelled groups, because the groups
+    # are what stop an unvalidated lean being read as a finding.
+    axes_text = AXES.read_text(encoding='utf-8')
+    groups: dict[str, list[int]] = {}
+    heading = None
+    for line in axes_text.splitlines():
+        if line.startswith('## '):
+            heading = line[3:].strip()
+        row = re.match(r'\|\s*(\d+)\s*\|', line)
+        if row and heading:
+            groups.setdefault(heading, []).append(int(row.group(1)))
+    numbered = sorted(n for ids in groups.values() for n in ids)
+    check('AXES.md numbers eleven axes, 1 to 11, once each',
+          numbered == list(range(1, 12)), f'got {numbered}')
+    check('AXES.md sorts them into exactly three labelled groups',
+          len(groups) == 3, f'got {sorted(groups)}')
+    labels = ' '.join(groups).lower()
+    for word, why in (('precedent', 'register and stance family'),
+                      ('rhetorical', 'craft family'),
+                      ('unvalidated', 'the unvalidated axis')):
+        check(f'AXES.md labels {why}', word in labels)
 
     print(('OK' if not FAILURES else 'FAILED'), f'({len(FAILURES)} failures)')
     return 1 if FAILURES else 0

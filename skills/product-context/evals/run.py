@@ -50,6 +50,70 @@ def main() -> int:
     check('unverified fields stay marked rather than filled', 'UNKNOWN' in text)
     check('never invents a claim', 'Never write a claim into this file' in text)
 
+    # THE RECORD IS HOME. Connected, five of the nine questions arrive drafted
+    # from the record and four are asked cold, but all nine still go to the
+    # user. A vague connected section is the failure mode: it once said "use
+    # the snapshot as the draft answer to questions one, two and three", which
+    # named no page and no verb, so no reader could act on it. These checks
+    # pin the parts that have to stay concrete.
+    connected = text.split('## With AfterLaunch connected', 1)[1].split('\n## ', 1)[0]
+    flat = re.sub(r'\s+', ' ', connected)
+
+    for slug in ('about-my-business', 'my-audience', 'my-competitors', 'about-my-voice'):
+        check(f'connected section names the page: {slug}', slug in connected)
+
+    # The split is asserted as a PROPERTY, not as two hardcoded lists. Every
+    # question is accounted for exactly once, and the declared drafted set has
+    # to match the bullets that actually draft one. An earlier version listed
+    # the numbers it expected, which passed a text that put question 4 in both
+    # halves and a text that quietly dropped a bullet.
+    def declared(label: str) -> set[int]:
+        m = re.search(label + r', questions ([\d,\s]*\d+ and \d+)', flat)
+        return {int(n) for n in re.findall(r'\d+', m.group(1))} if m else set()
+
+    drafted, cold = declared('[Dd]rafted from the record'), declared('[Aa]sked cold')
+    bulleted = {int(n) for n in re.findall(r'\*\*Question (\d+),', connected)}
+    check('every question is drafted or asked cold, none both',
+          drafted | cold == set(range(1, 10)) and not (drafted & cold),
+          f'drafted={sorted(drafted)} cold={sorted(cold)}')
+    check('the drafted questions are the ones with a bullet',
+          bulleted == drafted and drafted, f'bullets={sorted(bulleted)}')
+    check('the four asked cold are the four a site cannot know',
+          cold == {4, 5, 8, 9}, str(sorted(cold)))
+
+    # THE SEED GUARD. Showing a draft is only safe because an unconfirmed one
+    # is never written down. Asserted as a property of ONE sentence: it has to
+    # tie the marker to the act of persisting it, under a negation or a
+    # condition. A proximity window over the word "confirm" was tried first
+    # and failed both ways, passing a text whose guard had been deleted and an
+    # unrelated UNKNOWN sentence added, and failing an honest reword to
+    # "approve". Bold markers come out before the split so a sentence ending
+    # inside them is not glued to the next one.
+    sentences = re.split(r'(?<=\.)\s+', flat.replace('**', ''))
+    PERSISTS = re.compile(r'PRODUCT\.md|written into|goes into|persist', re.I)
+    CONDITION = re.compile(r'\b(never|not|until|unless)\b', re.I)
+    check('an unconfirmed draft is never persisted',
+          any('UNKNOWN' in s and PERSISTS.search(s) and CONDITION.search(s)
+              for s in sentences))
+
+    # Answers travel back, or the record stays wrong and every future draft
+    # inherits it. The local file is the cache; the record is home.
+    check('answers go back through the record', 'record_insight' in connected)
+    check('the local file is named as a cache of the record',
+          re.search(r'cache of (it|the record)', flat) is not None)
+
+    # NEVER call the site-derived voice the user's own. The page is the BRAND's
+    # voice, read from the website; conflating the two is the exact confusion
+    # this pack exists to remove, and it lives in one word. Matched as a family
+    # of phrasings, because a literal on one of them let "your own voice"
+    # through.
+    NEAR = 300
+    OWNED = re.compile(r"your (own )?voice|the user'?s (own )?voice", re.I)
+    for m in re.finditer('about-my-voice', text):
+        window = text[max(0, m.start() - NEAR):m.end() + NEAR]
+        check("the site-read voice is never called the user's own",
+              not OWNED.search(window), window.strip()[:80])
+
     # House rules.
     check('no em-dash', '\u2014' not in text)
     check('no exclamation mark', '!' not in text)
@@ -79,12 +143,25 @@ def main() -> int:
     check('no machine-specific home paths',
           not re.search(r'/Users/[a-z]|/home/[a-z]|~/', stripped))
 
-    # The write surface: this skill only ever reads, plus one optional record.
-    verbs = set(re.findall(r'`(get_\w+|list_\w+|\w+_move|\w+_draft|record_insight)`', text))
-    check('no verb beyond the declared surface',
-          verbs <= {'get_snapshot', 'list_kb_pages', 'get_kb_page', 'record_insight'},
-          str(verbs))
+    # THE WRITE SURFACE: three reads and one record, and nothing else exists.
+    # Matched as ANY backticked snake_case token against an allowlist, rather
+    # than as a list of verb shapes. The shape list let an invented page-write
+    # verb through, which is precisely the verb a reader reaches for after
+    # being told the pages are stale.
+    ALLOWED = {'list_kb_pages', 'get_kb_page', 'get_snapshot', 'record_insight'}
+    # A VERB, not any snake_case token: field and file names like author_kind
+    # or product_context are honest prose and a guard that fails on them is a
+    # guard that gets edited out under deadline. The prefixes are the ones a
+    # reader could plausibly reach for, invented or real.
+    PREFIXES = ('get_', 'list_', 'record_', 'set_', 'update_', 'create_',
+                'delete_', 'ship_', 'skip_', 'propose_', 'refresh_', 'run_')
+    tokens = set(re.findall(r'`([a-z][a-z0-9_]*)`', text))
+    verbs = {v for v in tokens if '_' in v and v.startswith(PREFIXES)}
+    check('no verb beyond the declared surface', verbs <= ALLOWED, str(verbs - ALLOWED))
     check('never ships a move', 'ship_move' not in text)
+    # And say so out loud, so the reader does not go looking for the verb.
+    check('says no tool writes a page',
+          re.search(r'no tool writes a page', flat) is not None)
 
     check('no scripts directory', not (SKILL.parent / 'scripts').exists())
 

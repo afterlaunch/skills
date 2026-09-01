@@ -81,7 +81,7 @@ not talk it out of that. A draft written without it invents the company it is
 describing, plausibly enough that nobody notices for months. It then reads
 `voice/VOICE.md`, `voice/profile.json` and `voice/samples/` for register, and
 its own `STYLE.md`, `HOOKS.md` and `FORMATS.md` for craft. It writes
-`draft/drafts/<date>.md` and keeps `draft/LEDGER.md`.
+`draft/drafts/<date>.md` and keeps the estate-root `LEDGER.md`.
 
 ## tells
 
