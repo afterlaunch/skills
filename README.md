@@ -7,32 +7,53 @@ What they do: get you posting useful things regularly, in your own voice, so
 the gaps in how AI answers and search find you start closing. Free, MIT, and
 useful on their own. Better pointed at [AfterLaunch](https://afterlaunch.io).
 
-Seven so far. More over time.
+7 so far. More dropping. 
+This is an active repo, 
+contributors welcome.
+rules : submit new or improve existing skills that help founders grow their business.
 
-## Start here: product-context
+# Start here: 
 
-Writes `product-context/PRODUCT.md`. What you sell, who for, what you can
-prove, the words you keep and the words you refuse. Everything else reads it.
+## product-context
+
+Writes `product-context/PRODUCT.md`. Your business in a nutshell. What you sell, who for, 
+what you can prove, the words you keep and the words you refuse. Everything else reads it.
 Skip it and an agent invents your company off your landing page, and every
 draft after that inherits the invention.
 
-You do not start from a blank page. The free Growth Snapshot at
-[afterlaunch.io](https://afterlaunch.io) reads your site and fills most of it
-in, then this walks you through fixing what it got wrong.
+The free Growth Snapshot at [afterlaunch.io](https://afterlaunch.io) is a fully comprehensive Business Snapshot 
+that lays the foundation for much better alignment in terms of content, relevance, and voice match.
+
+While it's not necessary to use AfterLaunch's Growth Snapshot, it comes with a free trial (and is like really really good I heard :P) 
+and after the trial ends you'll have learned how best to use the skills, and if you don't want to buy an AfterLaunch subscription, 
+you can still run these skills yourself manually and get value out of them :)
+
 
 ## farm
 
-Farming ideas. Everything you come across in a day goes in one door, and gets
-sorted into something to say, something to build, or something to remember.
-When you want to post, it looks across everything you kept and hands you an
-idea instead of a blank page.
+The Farm is everything. Douglas Adams may have said that at some point. Who knows. I just said it. so there.
 
-Nobody runs out of things to post. They run out of things they wrote down.
+Farming ideas. Everything you come across in a day goes in one door, and gets stored in a numbers of ways.
+Into something to say, something to build, or something to remember. The beauty is that this is all asyncronous.
+
+In Claude Code, its just `/farm 'foo' where foo = a url, a video/image/text or combination thereof, type something, doodle`
+
+The other end of this is the Content Production Pipeline - on any occassion when you want to post, 
+you can make your AI look across everything you kept and it hands you an
+idea from your content ingestion async pipeline instead of randomly generating something.
+
+If used well, you can mine active social topics and threads on communities to find in-vogue topics and come up with your own perspective.
+You can build a pretty great content calendar.
+
+Nobody runs out of ideas. They run out of things they wrote down. 
+This becomes your always accessible note-taker-brain interface directly connected to your content and product dev pipeline, 
+so you can go from idea to quality shipped assets in no time.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/farm-dark.svg">
   <img alt="The farm: one door in, three lanes out" src="assets/farm-light.svg">
 </picture>
+
 
 ## The other five
 
