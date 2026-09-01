@@ -146,12 +146,67 @@ def main() -> int:
     # two rounds ever collapse onto each other.
     check('the insight sentence is stable per axis and lean',
           'stable for the same axis and the same lean' in connected)
-    # The brand register is read before the first pair, off the markdown page.
+    # THE TWO REGISTERS. Both are read before the first pair, each asked for by
+    # name, so the user sees the brand's voice and whatever the record already
+    # believes about their own before picking anything. Reading one register
+    # and calling it the voice is the confusion this whole train exists to end.
     check('connected section reads the brand register before the first pair',
-          'get_voice_profile' in connected)
-    check('connected section keeps the rendered page as the fallback',
-          'get_kb_page' in connected and 'about-my-voice' in connected
+          'get_voice_profile' in connected and 'register `brand`' in connected)
+    check('connected section reads the personal register too',
+          'register `personal`' in connected)
+    # An account with no uploaded writing answers has_profile false, which is an
+    # answer and not an error, so the skill has to say so plainly rather than
+    # show an empty box or invent a personal voice from the site.
+    check('connected section handles an empty personal register honestly',
+          '`has_profile` is false' in connected
+          and 'no personal voice is on record yet' in connected)
+
+    # TIER ONE VERIFIES ITSELF. A deployment that validates loosely ignores an
+    # unknown argument instead of rejecting it, so the register-set call can
+    # come back holding the current row. Comparing the returned field to the
+    # one asked for is what stops a brand row being labelled personal.
+    # Scoped to has_profile true, because a register with no row honestly
+    # answers has_profile false with a null register, and reading that null as
+    # an ignored parameter would drop a tier and swallow the "no personal voice
+    # on record yet" message this train exists to deliver.
+    asked = connected.find('only where `has_profile` came back true')
+    check('tier one checks the returned register equals the one asked for',
+          asked != -1 and '`register` field equals the one you asked for' in connected
+          and 'label by the field that came back' in connected
+          and 'the parameter was ignored' in connected)
+    check('the tier-one self-check is scoped to a profile that exists',
+          'A false `has_profile` returns a null register' in connected
+          and 'not an ignored parameter' in connected)
+
+    # THE THREE TIERS, in order. Tier 2 is an older deployment whose tool takes
+    # no register; tier 3 is a deployment with no such tool at all. Each is
+    # labelled, so no tier ever shows a register the user cannot name.
+    rejected = connected.find('rejected because the tool does not take a register')
+    absent = connected.find('tool is absent entirely')
+    page = connected.find('about-my-voice')
+    check('connected section degrades when the register parameter is rejected',
+          rejected != -1 and 'no parameter' in connected
+          and '`register` field in the response' in connected)
+    check('connected section keeps the rendered page as the last tier',
+          absent != -1 and page > absent and 'get_kb_page' in connected
           and 'fall back' in connected)
+    # The page carries two labelled sections as of this train, so the last tier
+    # labels by heading and only calls the whole page the brand's when it is the
+    # old single-section shape.
+    check('the last tier labels by the page sections, not the whole page',
+          "\"Your brand's voice, read from your site\"" in connected
+          and '"Your voice, from your writing"' in connected
+          and 'single-section' in connected)
+    check('the tiers are ordered: self-check, register rejected, tool absent',
+          -1 < asked < rejected < absent)
+    check('every tier is labelled with the register it is showing',
+          'label' in connected and 'which register' in connected)
+
+    # WHICH REGISTER THE ROUND WRITES. The leans go back as the founder's own
+    # voice. A lean filed against the brand register would teach the website's
+    # voice from the founder's picks, which is the inverse of the point.
+    check('connected section says the leans it sends back are personal',
+          'personal register' in connected and "never the brand's" in connected)
 
     # THE HOME. Connected, the record is the master copy and the local files
     # are a cache. Anything that reinstates the local model as the home is the

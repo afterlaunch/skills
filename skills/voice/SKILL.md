@@ -170,14 +170,37 @@ the local files become a copy of what was sent. A site read already gives
 you the brand register; the personal one is what only this test can reach.
 
 - **Read the brand register first, before the first pair.** Call
-  `get_voice_profile`. It returns the structured voice the product itself
-  drafts in, tone and phrases and sentence style and what it avoids, with
-  a `source` field saying whether that came from the site or from uploaded
-  samples. Show it labelled plainly as the brand's voice. If the tool is
-  not available, which means an older deployment, fall back to
+  `get_voice_profile` with register `brand`. It returns the structured
+  voice the product itself drafts in, tone and phrases and sentence style
+  and what it avoids. Show it labelled plainly as the brand's voice, read
+  from the site, so the user sees the contrast before being asked to pick
+  anything, which is what the opening above is for. On either call that
+  sets a register, and only where `has_profile` came back true, check the
+  `register` field equals the one you asked for: a mismatch means the
+  parameter was ignored, so treat it as the tier below and label by the
+  field that came back. A false `has_profile` returns a null register and
+  is the honest empty answer, not an ignored parameter.
+- **Then read the personal register, in the same breath.** Call
+  `get_voice_profile` with register `personal`. If `has_profile` is true,
+  show it labelled as the founder's own voice already on record, taken
+  from writing they supplied, so what the record already believes about
+  how they write is on the table before the first pair and they can say
+  there and then if it is wrong. If `has_profile` is false, say plainly
+  that no personal voice is on record yet and that this round is what
+  starts it.
+- **Degrade honestly, three tiers, and label every one of them.** If the
+  call is rejected because the tool does not take a register, which means
+  an older deployment, call `get_voice_profile` with no parameter, read
+  the `register` field in the response if it is there, and label what you
+  show by that. If the tool is absent entirely, fall back to
   `get_kb_page` with slug `about-my-voice`, the rendered page of the same
-  thing. Either way the user sees the contrast before being asked to pick
-  anything, which is what the opening above is for.
+  thing, and label by its two section headings when the page carries them,
+  "Your brand's voice, read from your site" and "Your voice, from your
+  writing", calling the whole page the brand's only in the older
+  single-section shape. Whichever tier you land on,
+  the user always knows which register they are looking at.
+- **What this round trains is the personal register.** The leans it sends
+  back as voice insights below are the personal one, never the brand's.
 - **Send every lean back after the round.** For each axis with enough
   observations to state a lean, one `record_insight` with kind `voice`:
   one plain sentence in the user's own terms and nothing else, for example
