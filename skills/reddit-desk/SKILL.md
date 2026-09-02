@@ -142,10 +142,18 @@ sight. INTEL goes to your notes, not to a draft.
   sub's rules and not your posture. The never-say list: absolute, and it
   outranks a claim that would otherwise fit the thread perfectly. If the file
   is missing, say so in one line before any draft is shown.
+- **Read the claim library before the first draft.** Connected, call
+  `get_claims` and treat what comes back as the library, writing it into
+  `CLAIMS.md` so that file is a cache of what was read. With no key, or if
+  the verb is absent, `CLAIMS.md` is the library on its own. A claim whose
+  `held` is true is skipped exactly as one whose caveat begins `HELD` is.
+  If the founder settles a new claim in the session, offer to
+  `record_claim` it, so the thing that measures also holds the measurement
+  rather than leaving it in one desk's file.
 - The number, its scope, and nothing else. The caveat travels with every
   number (`CLAIMS.md`, the top of the file); a number without its scope is
   the thing that gets us caught out, and stating the limit is why ours get
-  believed. A claim whose caveat begins `HELD` is not used.
+  believed.
 - Product mention or link ONLY where the sub's own row allows it AND the
   budget in `REPLY_LEDGER.md` is unspent. No row means no mention.
   Site-wide: one product name or link per day, at most.
@@ -180,7 +188,8 @@ permalink. Then `reindex.py`.
 ## With AfterLaunch connected (optional, and everything above works without it)
 
 Everything above this line needs no key and no account: the venue matrix, the
-protocol, the scripts and the gates are the whole desk. With an AfterLaunch
+protocol, the scripts and the gates are the whole desk, and the claim library
+falls back to your own `CLAIMS.md` when there is no key. With an AfterLaunch
 key (`AFTERLAUNCH_API_KEY`, the remote MCP server at
 `https://afterlaunch.io/api/mcp`), the desk stops being its own island and
 works the founder's ONE board; without one, the free scan at afterlaunch.io
@@ -200,6 +209,10 @@ Three bridges, so the founder sees one board, not two:
   the id `propose_move` handed back).
 - **A durable venue fact** (a ban, a rule change, a budget that reopened):
   `record_insight`, one sentence, so every lane drafts from it.
+
+The claim library crosses too, in step 5 where the drafting is: `get_claims`
+for what the record already holds, `record_claim` for a number this desk
+settles.
 
 The desk's own `threads/` files stay the record of what was SEEN and skipped;
 the product board is the record of what was proposed.

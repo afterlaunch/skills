@@ -229,6 +229,43 @@ def main() -> int:
           and re.search(r'no row', bodies[classify], re.I) is not None,
           bodies[classify] if classify >= 0 else '')
 
+    # TRAIN 3 ITEM 13: THE CLAIM LIBRARY LIVES IN THE RECORD. The desk is the
+    # thing that measures; until now it was also the only thing holding the
+    # measurements, in a file its X sibling kept a second, unsynced copy of.
+    # Connected, `get_claims` is the library and `CLAIMS.md` is the cache of
+    # what was read. Scoped to the DRAFT step body, so a mention anywhere else
+    # in the file cannot satisfy a rule about where the drafter is standing.
+    draft_step = first(lambda b: 'CLAIMS.md' in b and 'REPLY_LEDGER.md' in b)
+    check('the draft step is the one that holds the claim rule', draft_step >= 0)
+    dbody = re.sub(r'\s+', ' ', bodies[draft_step] if draft_step >= 0 else '')
+
+    # FIRST, and first is the whole point: a draft written before the library
+    # is read is a draft written against a stale local copy. QA proved the
+    # byte offset alone is not that invariant (finding 4, 2026-09-02): it
+    # reworded the bullet to "call get_claims AFTER the replies are written"
+    # without moving a byte, and the offset check passed clear. So the
+    # IMPERATIVE is asserted against the bullet's own text first, and the
+    # position is kept as a second line rather than the only one.
+    m = re.search(r'- \*\*Read the claim library[^\n]*\n(?:  [^\n]*\n)*',
+                  bodies[draft_step] if draft_step >= 0 else '')
+    bullet = re.sub(r'\s+', ' ', m.group(0) if m else '')
+    check('the claim bullet itself puts get_claims before the first draft',
+          'get_claims' in bullet and 'before the first draft' in bullet, bullet)
+    check('and the bullet still sits ahead of the drafting rule in the step',
+          -1 < dbody.find('get_claims') < dbody.find('The number, its scope'))
+    # And it degrades to the file, which is what a reader with no key has.
+    check('CLAIMS.md is the offline fallback and the cache of what was read',
+          'CLAIMS.md` is the library on its own' in dbody
+          and 'cache of what was read' in dbody)
+    # A held claim is skipped whichever way it arrives. The two shapes are the
+    # verb's `held` flag and the file's `HELD` caveat, and they mean one thing.
+    check('a held claim from the record is skipped exactly as a HELD caveat is',
+          re.search(r'`held` is true is skipped', dbody) is not None
+          and 'HELD' in dbody)
+    # The desk measures, so the desk feeds the library rather than hoarding it.
+    check('a claim settled in the session is offered back to the record',
+          'record_claim' in dbody)
+
     # The defect in its own words: the seed standing in as the rulebook. Read
     # as a target, not a verb list, because "use|copy" plus two filenames also
     # matches the honest sentences that teach the row FORMAT, and a guard that

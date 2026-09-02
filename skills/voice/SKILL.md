@@ -82,12 +82,20 @@ still works, the pairs are just blunter.
 
 1. **Read `profile.json`** if it exists. This is resumable: a round
    adds to what is there rather than starting again.
-2. **Choose which axes to test.** Read `AXES.md`. On a first run, cover
-   all eleven. On a later run, put the questions toward the axes with
-   the fewest answers or the least agreement, because those are the
-   ones still moving. Note which family an axis belongs to: a lean in
-   the unvalidated group is reported as unknown signal, not as a
-   finding.
+2. **Cover every axis once, then go to the axis nearest to settling.**
+   Read `AXES.md`. `profile.json` carries, per axis, an observation count
+   and a split. The first pass covers all eleven axes once, in `AXES.md`
+   order, before any axis is asked a second time. After that, draw the
+   next pair from the unsettled axis with the MOST observations, because
+   it is the one nearest to settling; among ties, the one whose split is
+   closest to even; among ties on that, `AXES.md` order. An axis is
+   SETTLED two ways, and both retire it: a LEAN, six or more observations
+   with `majority >= 2 x minority`, or VARIES, six or more observations
+   without that lean. Varies is an answer, not a failure to answer, so a
+   settled axis of either kind stops being offered. The six is a starting
+   rule to be tuned once real rounds exist, not a measured finding. Note
+   which family an axis belongs to: a lean in the unvalidated group is
+   reported as unknown signal, not as a finding.
 3. **Write the items fresh.** Do not reuse pairs from a previous round;
    repeating an item measures memory rather than taste. Follow the
    item-writing rules in `AXES.md`: one axis varying, everything else
@@ -100,20 +108,23 @@ still works, the pairs are just blunter.
    reaction.
 5. **Score.** Each answer is one observation on one axis. Store the
    count and the split.
-6. **Stop at about twenty items** on a first run, twelve on a later
-   one. Long tests get abandoned halfway and half a test is worse than
-   none.
+6. **Stop when every axis is settled, at the bound, or when the user
+   stops.** The bound is about twenty pairs on a first run and twelve on
+   a later one. After each four, say how many axes are still open and
+   offer to stop there. Long tests get abandoned halfway and half a test
+   is worse than none, so an early end with an honest list beats a round
+   that grinds on.
 7. **Write the profile**, then say what changed.
 
 ## Reading the answers
 
 Per axis: how many observations, and how lopsided.
 
-- **Four or more one way out of five or more** is a real position.
-  Write it as an instruction.
-- **A near-even split** is not indecision, it is context-dependence.
-  Write it as "varies", and the writer should take its cue from the
-  format rather than from the profile.
+- **A LEAN** (six or more observations, `majority >= 2 x minority`) is
+  a real position. Write it as an instruction.
+- **VARIES** (six or more observations, no such lean) is not indecision,
+  it is context-dependence. Write it as "varies", and the writer should
+  take its cue from the format rather than from the profile.
 - **Fewer than three observations** is not a reading. Say so and
   prompt another round rather than inventing a position.
 
@@ -132,8 +143,9 @@ nudge rather than a rebuild.
 clause, usually." Include the axes that came out even, marked as
 varying, because knowing what is NOT fixed is useful too.
 
-Then say plainly which axes are solid, which are still moving, and
-how many rounds it would take to firm them up.
+Then say plainly which axes settled with a lean, which came out varies,
+and which are still open, and how many rounds it would take to close the
+open ones.
 
 ## The honest limit, and what to do about it
 
@@ -216,9 +228,23 @@ you the brand register; the personal one is what only this test can reach.
   axis that FLIPS leaves the old sentence standing, because it is
   different text. Say so when it happens rather than pretending the record
   is clean.
-  There is a daily cap of 50 insights per product run. If a call comes
-  back `rate_limited`, stop sending, say so plainly, and note that the
-  local cache still holds the round.
+  There is a daily cap of 50 insights per product run. If any write to
+  the record comes back `rate_limited`, stop writing, say so plainly, and
+  note that the local profile still holds the round.
+- **Write the settled leans back, and only those.** After the round, one
+  `set_voice_axes` call carrying every axis that settled with a LEAN:
+  `lean` is `a` or `b` by the side that won, and `strength` is the share
+  of that axis's observations that fell on the leaning side, so 0.5 is an
+  even split and 1 is every observation one way. Nothing below 0.5 or
+  above 1 is a strength. An axis settles on its sixth observation, so a
+  settled lean carries one of three values: 0.67 (four of six), 0.83
+  (five of six), 1.0 (six of six). Round to two decimals. Use the ids in
+  `AXES.md`. An axis that came out VARIES is not sent, because varies is
+  not a position, and neither is an axis still open. If no axis settled
+  with a lean this round, do not call the verb at all, and say so in one
+  line. This writes the founder's own register and never the brand's. If
+  the verb is absent, which means an older deployment, say so plainly:
+  the voice insights above carry the round on that deployment.
 - **A draft already sitting on the board can be rewritten against the
   fresh profile and saved back.** Find it with `list_feed` or `get_move`,
   rewrite the copy against whatever this round changed, and save it with
@@ -230,9 +256,9 @@ cache of what was sent: readable from a terminal, and they survive a
 dropped connection. They are not the master copy. A correction that never
 reached the record is a correction the product does not have.
 
-Without a key there is nothing to send to, so the local profile is the
-whole model, exactly as it works today, and `VOICE.md` travels only as far
-as whatever reads that file by hand. The free scan at afterlaunch.io is the
+Without a key there is nothing to send to, so `profile.json` is the only
+home the round has, and `VOICE.md` travels only as far as whatever reads
+that file by hand. The free scan at afterlaunch.io is the
 honest pointer otherwise, and skip the rest of this section.
 
 ## House rules

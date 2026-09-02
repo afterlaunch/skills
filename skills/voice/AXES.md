@@ -10,6 +10,9 @@ lean on one of those axes means something outside this skill. The second
 family is craft rather than register. The third is one axis nobody has
 validated. Read a result with its group in mind.
 
+The `id` column is the axis's stable name. It is what a calibrated lean is
+written back against, so it never changes even when the tables are re-sorted.
+
 **Only genuinely variable things belong here.** Any hard rules already
 in force for this brand (no em-dashes, no aphorisms, no "it's not X
 it's Y", a banned-vocabulary list, contractions on) are settled and
@@ -25,15 +28,15 @@ and spoken versus written as separate continua rather than one. A
 formal email is written. A casual speech is spoken. A voice can sit
 anywhere on both.
 
-| # | Axis | Pole A | Pole B |
-| --- | --- | --- | --- |
-| 1 | Sentence length | Short, clipped, one clause | Longer, more clauses, flowing |
-| 2 | Register | Spoken, casual | Written, precise |
-| 3 | Address | Speaks to "you" | States to the room |
-| 4 | Certainty | Flat assertion | Measured, room for doubt |
-| 5 | Technical density | Assumes the reader knows | Explains as it goes |
-| 6 | Self-reference | "I" and "we" visible | Subject forward, author invisible |
-| 7 | Formality | Plain and informal | Formal and careful |
+| # | id | Axis | Pole A | Pole B |
+| --- | --- | --- | --- | --- |
+| 1 | `sentence_length` | Sentence length | Short, clipped, one clause | Longer, more clauses, flowing |
+| 2 | `register` | Register | Spoken, casual | Written, precise |
+| 3 | `address` | Address | Speaks to "you" | States to the room |
+| 4 | `certainty` | Certainty | Flat assertion | Measured, room for doubt |
+| 5 | `technical_density` | Technical density | Assumes the reader knows | Explains as it goes |
+| 6 | `self_reference` | Self-reference | "I" and "we" visible | Subject forward, author invisible |
+| 7 | `formality` | Formality | Plain and informal | Formal and careful |
 
 ## Rhetorical structure, craft rather than register
 
@@ -41,17 +44,17 @@ These three are real and worth measuring, but they are moves a writer
 makes rather than positions a voice holds. A lean here describes how
 pieces are built, not how they sound.
 
-| # | Axis | Pole A | Pole B |
-| --- | --- | --- | --- |
-| 8 | Opening | Cold open straight on the claim | Context first, then the claim |
-| 9 | Evidence order | Lead with the number | Lead with the situation |
-| 10 | Closing | Ends on the point | Ends on an invitation |
+| # | id | Axis | Pole A | Pole B |
+| --- | --- | --- | --- | --- |
+| 8 | `opening` | Opening | Cold open straight on the claim | Context first, then the claim |
+| 9 | `evidence_order` | Evidence order | Lead with the number | Lead with the situation |
+| 10 | `closing` | Closing | Ends on the point | Ends on an invitation |
 
 ## Unvalidated: no taxonomy covers this, included because the founder wanted it
 
-| # | Axis | Pole A | Pole B |
-| --- | --- | --- | --- |
-| 11 | Humour | Dry, occasional | Straight throughout |
+| # | id | Axis | Pole A | Pole B |
+| --- | --- | --- | --- | --- |
+| 11 | `humour` | Humour | Dry, occasional | Straight throughout |
 
 Treat a lean here as unknown signal rather than borrowed signal. It may
 be measuring something real about this person, and it may be measuring
