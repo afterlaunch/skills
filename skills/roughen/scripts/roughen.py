@@ -330,8 +330,8 @@ def report(text: str, register: dict, tol: dict) -> tuple[list[dict], int]:
         ln = line_of(text, pos)
         pos += len(para) + 2
         body = para.strip()
-        if not body or body.startswith(('```', '- ', '* ', '|', '#')):
-            continue
+        if not body or body.startswith(('```', '- ', '* ', '|', '#')) or re.match(r'\d+\. ', body):
+            continue  # code, lists, tables and headings are not paragraphs
         sentences = [s for s in re.split(r'(?<=[.?!])\s+', body) if s.strip()]
         if len(sentences) > limit:
             findings.append({'check': 'long_paragraph', 'line': ln, 'evidence': f'{len(sentences)} sentences, limit {limit}: "{body[:60]}..."', 'hard': False})

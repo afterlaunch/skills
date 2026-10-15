@@ -81,8 +81,10 @@ line of the piece.
 
 It will not invent a fact, a feeling or a reaction to make a piece sound lived
 in. It will not rewrite a person's own words. It will not add roughness by hand;
-only the dice may, and only at your tolerances. And it cannot tell you whether
-the result reads better to a real reader. That needs a reader.
+only the dice may, and only at your tolerances.
+
+And it cannot tell you whether the result reads better to a real reader. That
+needs a reader.
 
 ## Check it yourself
 
