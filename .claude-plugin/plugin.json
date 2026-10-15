@@ -1,7 +1,7 @@
 {
   "name": "afterlaunch-skills",
-  "description": "Free skills for your AI agent, from the AfterLaunch team, approved one at a time. Today: roughen, which makes machine-written prose read as if a person typed it.",
-  "version": "0.2.0",
+  "description": "Free skills for your AI agent, from the AfterLaunch team, approved one at a time. Today: roughen, which makes machine-written prose read as if a person typed it, and findable, which checks whether search engines and AI assistants can read your site and fixes what stops them.",
+  "version": "0.3.0",
   "author": {
     "name": "AfterLaunch",
     "url": "https://afterlaunch.io"
