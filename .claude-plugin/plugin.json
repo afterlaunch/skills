@@ -1,11 +1,11 @@
 {
-  "name": "roughen",
-  "description": "Make machine-written prose read as if a person typed it. One register of the patterns that give AI writing away, an audit that fixes a model's words and flags a person's, and a dice pass that adds a little roughness at tolerances you set.",
-  "version": "0.1.0",
+  "name": "afterlaunch-skills",
+  "description": "Free skills for your AI agent, from the AfterLaunch team, approved one at a time. Today: roughen, which makes machine-written prose read as if a person typed it.",
+  "version": "0.2.0",
   "author": {
     "name": "AfterLaunch",
     "url": "https://afterlaunch.io"
   },
-  "homepage": "https://github.com/afterlaunch/roughen",
+  "homepage": "https://github.com/afterlaunch/skills",
   "license": "MIT"
 }

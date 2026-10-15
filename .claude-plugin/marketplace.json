@@ -1,15 +1,15 @@
 {
-  "name": "roughen",
-  "description": "Make machine-written prose read as if a person typed it.",
+  "name": "afterlaunch-skills",
+  "description": "Free skills for your AI agent, from the AfterLaunch team.",
   "owner": {
     "name": "AfterLaunch",
     "url": "https://afterlaunch.io"
   },
   "plugins": [
     {
-      "name": "roughen",
+      "name": "afterlaunch-skills",
       "source": "./",
-      "description": "The roughen skill: take out what a model reaches for, then put back by dice what a person leaves in."
+      "description": "Every skill in this repository, one folder each under skills/. Today: roughen."
     }
   ]
 }
