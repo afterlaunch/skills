@@ -1,0 +1,15 @@
+{
+  "name": "roughen",
+  "description": "Make machine-written prose read as if a person typed it.",
+  "owner": {
+    "name": "AfterLaunch",
+    "url": "https://afterlaunch.io"
+  },
+  "plugins": [
+    {
+      "name": "roughen",
+      "source": "./",
+      "description": "The roughen skill: take out what a model reaches for, then put back by dice what a person leaves in."
+    }
+  ]
+}
