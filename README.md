@@ -13,6 +13,7 @@ other people beside ours: https://afterlaunch.io/tools/skills
 | Skill | What it does |
 | --- | --- |
 | [`roughen`](skills/roughen/SKILL.md) | Makes machine-written prose read as if a person typed it. Audits a finished piece against one register of the patterns that give AI writing away, fixes a model's words and only flags a person's, then rolls dice at tolerances you set to put back a little of the roughness a person leaves behind. |
+| [`findable`](skills/findable/SKILL.md) | Checks whether search engines and AI assistants can read a site, and fixes what stops them: the crawler rules, the sitemap, every public page, the structured data, and the five questions a customer would type into ChatGPT. Runs in the repository, on a branch, and hands back a table of page, problem, fixed or needs you. The live twin for a site you do not own is https://afterlaunch.io/tools/findable. |
 
 ## Install
 
@@ -22,8 +23,8 @@ These are instructions, not software. Pick whichever of these you are.
 Windsurf, Aider, anything that can run a command. Paste this:
 
 ```
-Clone https://github.com/afterlaunch/skills and read skills/roughen/SKILL.md
-in full. Keep it as a skill you follow when the task fits.
+Clone https://github.com/afterlaunch/skills and read the SKILL.md of the
+skill you want (skills/roughen or skills/findable) in full. Keep it as a skill you follow when the task fits.
 ```
 
 **On Claude Code there is a shortcut:**
